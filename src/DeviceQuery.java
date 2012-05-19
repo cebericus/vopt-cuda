@@ -1,5 +1,4 @@
 /*
- * Modified by nelsoncs for integration - 2012
  * Team 4b: Michael Barger, Alex Kelly, Cole Nelson
  * @author nelsoncs 2012-May-18 
  *
@@ -61,7 +60,10 @@ public class DeviceQuery{
 	}
 
     /**
+     * NOTE: only used for testing this class.
+     * TODO move to JUnit
      * Returns a short description of the given CUdevice_attribute constant
+     * 
      * Copyright 2011 Marco Hutter - http://www.jcuda.org
      * 
      * @return A short description of the given constant

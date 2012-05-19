@@ -46,7 +46,9 @@ public class Device {
         /** device attributes */
         this.attributes = new HashMap<Integer, Integer>();
         
-        /** ugly but it works */
+        /** ugly but it works, also note these constants are described
+         * in the nvidia cuda library under device management 
+         * cuDeviceGetAttribute() */
         attributes.put(CU_DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK, 0);
         attributes.put(CU_DEVICE_ATTRIBUTE_MAX_BLOCK_DIM_X, 0);
         attributes.put(CU_DEVICE_ATTRIBUTE_MAX_BLOCK_DIM_Y, 0);
@@ -100,6 +102,30 @@ public class Device {
             
         	attribute.setValue( array[0] );
         }
+	}
+	
+	public int corePerMP( int major, int minor ) {
+		
+		int coresPerMP = 0;
+		
+		switch (major) {
+		
+		case 1:
+			coresPerMP = 8;
+			break;
+
+		case 2:
+			if( minor == 1 | minor == 2 )
+				coresPerMP = 32;
+			else
+				coresPerMP = 48;
+			break;
+			
+		default:
+			break;
+		}
+		
+		return coresPerMP;
 	}
 	
     /**
