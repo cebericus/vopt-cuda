@@ -59,6 +59,8 @@ public class DeviceQuery{
 		return cudaDevices;
 	}
 
+
+	
     /**
      * NOTE: only used for testing this class.
      * TODO move to JUnit
@@ -180,6 +182,8 @@ public class DeviceQuery{
             							+ query.cudaDevices[i].getName() + 
                 " with Compute Capability " + query.cudaDevices[i].getMajor() 
                 + "." + query.cudaDevices[i].getMinor() );
+            
+            System.out.println( "Cores per MP " + query.cudaDevices[i].coresPerMP() );
                     
             for( Map.Entry<Integer, Integer> attribute : 
             				query.cudaDevices[i].getAttributes().entrySet())

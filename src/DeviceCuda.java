@@ -10,8 +10,17 @@ import java.util.*;
  * Team 4b: Michael Barger, Alex Kelly, Cole Nelson
  * @author nelsoncs 2012-May-18 
  */
-public class DeviceCuda {
 
+/**
+ * Uses jcuda to to query the cuda device number passed to the constructor as an
+ * argument.  A HashMap is created with the key based on the built-in cuda
+ * constants for each attribute.
+ * 
+ * @author nelsoncs 2012-May-18
+ *
+ */
+public class DeviceCuda {
+	
 	private String name;
 
 	private int major;
@@ -21,7 +30,8 @@ public class DeviceCuda {
 	
 	/**
 	 * constructor
-	 * @param dev_num
+	 * @param dev_num is the device number for which attribute information will
+	 * be queried.
 	 */
 	public DeviceCuda( int dev_num ) {
 		
@@ -104,21 +114,26 @@ public class DeviceCuda {
         }
 	}
 	
-	public int corePerMP( int major, int minor ) {
+	/**
+	 * takes the major and minor compute capabilities numbers for any given 
+	 * device and returns the number of cores per MP for that class of device
+	 * @return # of cores per MP
+	 */
+	public int coresPerMP() {
 		
 		int coresPerMP = 0;
 		
-		switch (major) {
+		switch ( this.getMajor() ) {
 		
 		case 1:
 			coresPerMP = 8;
 			break;
 
 		case 2:
-			if( minor == 0 )
+			if( this.getMinor() == 0 )
 				coresPerMP = 32;
 			else
-				if( minor == 1 )
+				if( this.getMinor() == 1 )
 					coresPerMP = 48;
 
 			break;
@@ -129,6 +144,7 @@ public class DeviceCuda {
 		
 		return coresPerMP;
 	}
+	
 	
     /**
      * Creates a String from a zero-terminated string in a byte array
@@ -185,6 +201,7 @@ public class DeviceCuda {
 	}
     
 	/**
+	 * unused - for testing
 	 * @param args
 	 */
 	public static void main(String[] args) {
