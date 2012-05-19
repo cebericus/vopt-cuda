@@ -115,10 +115,12 @@ public class Device {
 			break;
 
 		case 2:
-			if( minor == 1 | minor == 2 )
+			if( minor == 0 )
 				coresPerMP = 32;
 			else
-				coresPerMP = 48;
+				if( minor == 1 )
+					coresPerMP = 48;
+
 			break;
 			
 		default:
