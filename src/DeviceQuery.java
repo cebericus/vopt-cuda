@@ -12,18 +12,22 @@ import java.util.*;
 import jcuda.driver.*;
 
 /**
- * queries all attributes of all available devices
- * uses JCUDA 
+ * queries all attributes of all available devices, and calculates a couple
+ * 
+ * note the constants used as keys for the hashmap data structure are described
+ * in the nvidia cuda library under device management cuDeviceGetAttribute()
  */
 public class DeviceQuery{
-	
+
 
 	private int deviceCount;
-	private DeviceCuda [] cudaDevices;
-	
-    /**
-     * Constructor
-     */
+	private DeviceAttributes [] cudaDevices;
+
+	/**
+	 * Constructor
+	 * uses JCUDA to call cuInit(), get the count of devices on system and then get
+	 * cuda attributes for each device found.
+	 */
     public DeviceQuery()
     {
         JCudaDriver.setExceptionsEnabled(true);
@@ -37,11 +41,11 @@ public class DeviceQuery{
         this.deviceCount = deviceCountArray[0];
         
         // create array of device attribute objects
-        this.cudaDevices = new DeviceCuda[this.deviceCount];
+        this.cudaDevices = new DeviceAttributes[this.deviceCount];
 
         for (int i = 0; i < deviceCount; i++)
         {
-        	cudaDevices[i] = new DeviceCuda( i );
+        	cudaDevices[i] = new DeviceAttributes( i );
         }
     }
 	
@@ -55,7 +59,7 @@ public class DeviceQuery{
 	/**
 	 * @return the cudaDevices
 	 */
-	public DeviceCuda[] getCudaDevices() {
+	public DeviceAttributes[] getCudaDevices() {
 		return cudaDevices;
 	}
 
@@ -107,9 +111,9 @@ public class DeviceQuery{
             case CU_DEVICE_ATTRIBUTE_KERNEL_EXEC_TIMEOUT: 
                 return "Whether there is a run time limit on kernels";
             case CU_DEVICE_ATTRIBUTE_INTEGRATED: 
-                return "DeviceCuda is integrated with host memory";
+                return "Device is integrated with host memory";
             case CU_DEVICE_ATTRIBUTE_CAN_MAP_HOST_MEMORY: 
-                return "DeviceCuda can map host memory into CUDA address space";
+                return "Device can map host memory into CUDA address space";
             case CU_DEVICE_ATTRIBUTE_COMPUTE_MODE: 
                 return "Compute mode";
             case CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_WIDTH: 
@@ -133,15 +137,15 @@ public class DeviceQuery{
             case CU_DEVICE_ATTRIBUTE_SURFACE_ALIGNMENT: 
                 return "Alignment requirement for surfaces";
             case CU_DEVICE_ATTRIBUTE_CONCURRENT_KERNELS: 
-                return "DeviceCuda can execute multiple kernels concurrently";
+                return "Device can execute multiple kernels concurrently";
             case CU_DEVICE_ATTRIBUTE_ECC_ENABLED: 
-                return "DeviceCuda has ECC support enabled";
+                return "Device has ECC support enabled";
             case CU_DEVICE_ATTRIBUTE_PCI_BUS_ID: 
                 return "PCI bus ID of the device";
             case CU_DEVICE_ATTRIBUTE_PCI_DEVICE_ID: 
                 return "PCI device ID of the device";
             case CU_DEVICE_ATTRIBUTE_TCC_DRIVER: 
-                return "DeviceCuda is using TCC driver model";
+                return "Device is using TCC driver model";
             case CU_DEVICE_ATTRIBUTE_MEMORY_CLOCK_RATE: 
                 return "Peak memory clock frequency in kilohertz";
             case CU_DEVICE_ATTRIBUTE_GLOBAL_MEMORY_BUS_WIDTH: 
@@ -153,7 +157,7 @@ public class DeviceQuery{
             case CU_DEVICE_ATTRIBUTE_ASYNC_ENGINE_COUNT: 
                 return "Number of asynchronous engines";
             case CU_DEVICE_ATTRIBUTE_UNIFIED_ADDRESSING: 
-                return "DeviceCuda shares a unified address space with the host";
+                return "Device shares a unified address space with the host";
             case CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_LAYERED_WIDTH: 
                 return "Maximum 1D layered texture width";
             case CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_LAYERED_LAYERS: 
@@ -178,7 +182,7 @@ public class DeviceQuery{
 
         for (int i = 0; i < query.deviceCount; i++)
         {
-            System.out.println("DeviceCuda " + i + ": " 
+            System.out.println("Device " + i + ": " 
             							+ query.cudaDevices[i].getName() + 
                 " with Compute Capability " + query.cudaDevices[i].getMajor() 
                 + "." + query.cudaDevices[i].getMinor() );

@@ -19,7 +19,7 @@ import java.util.*;
  * @author nelsoncs 2012-May-18
  *
  */
-public class DeviceCuda {
+public class DeviceAttributes {
 	
 	private String name;
 
@@ -33,7 +33,7 @@ public class DeviceCuda {
 	 * @param dev_num is the device number for which attribute information will
 	 * be queried.
 	 */
-	public DeviceCuda( int dev_num ) {
+	public DeviceAttributes( int dev_num ) {
 		
 		CUdevice device = new CUdevice();
         cuDeviceGet( device, dev_num );
