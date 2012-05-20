@@ -37,7 +37,6 @@ public class BaseWindow {
 	private Text txtptx;
 	private Text txttxt;
 	private Text text;
-	private Text text_1;
 
 	/**
 	 * Launch the application.
@@ -359,22 +358,6 @@ public class BaseWindow {
 		Button button_2 = new Button(composite_3, SWT.NONE);
 		button_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		button_2.setText("Browse");
-		
-		Label lblDevicequery = new Label(compositeFiles, SWT.CENTER);
-		lblDevicequery.setText("deviceQuery");
-		
-		Composite composite_4 = new Composite(compositeFiles, SWT.NONE);
-		composite_4.setLayout(new GridLayout(2, false));
-		
-		text_1 = new Text(composite_4, SWT.BORDER);
-		text_1.setText("*.txt");
-		GridData gd_text_1 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_text_1.widthHint = 166;
-		text_1.setLayoutData(gd_text_1);
-		
-		Button button_3 = new Button(composite_4, SWT.NONE);
-		button_3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		button_3.setText("Browse");
 		
 		Canvas canvasNext = new CanvasGPU(compositeHistory, SWT.NONE);
 		canvasNext.setLayoutData(new RowData(244, 183));
