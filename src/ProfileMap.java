@@ -1,7 +1,9 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -204,10 +206,23 @@ public class ProfileMap {
 	 */
 	public List<String> methods(){
 		
-		List<String> methods;
+		List<String> methods = new ArrayList<String>();
 		
+		String tmp_str;
 		
-		
+		/** compose a list of all method records */
+		for( Map.Entry<Integer, String> entry : 
+								this.profileMap.get( "method" ).entrySet() ){
+
+			tmp_str = entry.getValue();
+
+			if( methods.contains( tmp_str ) == false ){
+
+				methods.add( tmp_str );
+
+			}
+
+		}
 		
 		return methods;
 	}
@@ -296,6 +311,7 @@ public class ProfileMap {
 		/** avoid overwriting exception print out */
 		System.out.println(  "  " );
 		
+		/** test hash map structures, a long log fiel will overrun the consoel buffer */
 		for( Map.Entry<String, HashMap<Integer, String> > entry : p.get().entrySet() ){
 			
 			System.out.println( "map: " + entry.getKey() );
@@ -307,6 +323,15 @@ public class ProfileMap {
 			}
 
 		}
+		
+		/** test composition of available method names */
+		List<String> l = p.methods();
+		
+		for( Iterator<String> it = l.iterator(); it.hasNext(); ){
+			System.out.println( it.next() );
+		}
+		
+		
 		
 		
 		
