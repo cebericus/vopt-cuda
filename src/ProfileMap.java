@@ -14,6 +14,19 @@ import org.eclipse.swt.widgets.Shell;
 
 
 /**
+ * Creates a Hashmap< String, HashMap<Integer, String> > for each profiler 
+ * option keyword as the key and a subhashmap as the value.
+ * Each of the sub- HashMap<Integer, String>'s is keyed with the line number and 
+ * has value'e for the profile data.
+ * 
+ * Profiler options currently tested (supported, others probably will fail):
+ * 
+ * gridsize3d, threadblocksize, stasmemperblock, dynmemperblock, regperthread
+ * memtransferdir, memtransfersize, memtransferhostmemtype, cacheconfigrequested
+ * cacheconfigexecuted, countermodeaggregate, warp_serialize, gld_incoherent,
+ * gst_incoherent
+ * 
+ * 
  * Team 4b: Michael Barger, Alex Kelly, Cole Nelson
  * @author nelsoncs 2012-May-20. 
  * 
@@ -25,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class ProfileMap {
 	
-	private HashMap<String, HashMap<Integer, String> > profileMap;
+	protected HashMap<String, HashMap<Integer, String> > profileMap;
 	
 	/**
 	 * constructor
@@ -111,11 +124,11 @@ public class ProfileMap {
 			String str_data = new String( "" );
 			
 			/** matches option ie. method= [, cputime= [ */
-			Pattern p_opt = Pattern.compile( "[a-z]+=\\[\\s" );
+			Pattern p_opt = Pattern.compile( "([a-z]|[_])+=\\[\\s" );
 			
-			/** note: skips over threadblocksize and gridsize because of commas */
-			/** matches data ie "=[ numbers, etc. ]" */
-			Pattern p_dat = Pattern.compile( "=\\[\\s([a-z]|[A-Z]|[0-9]|[,._])+\\s\\]" );
+			/** matches data  "=[ numbers, etc. without spaces ]" OR "[ number, number, number ]" */
+			Pattern p_dat = 
+					Pattern.compile( "(=\\[\\s([a-z]|[A-Z]|[0-9]|[,._])+\\s\\])|(\\[\\s[0-9]+\\,\\s[0-9]+\\,\\s[0-9]+\\s\\])" );
 
 			/** read file one line at time into buffer */
 			while( (str_data = in_f_read.readLine()) != null ){
@@ -136,13 +149,16 @@ public class ProfileMap {
 					String data = str_data.substring( m_dat.start() + 3, m_dat.end() - 2 );
 
 					/** check for xyz style option strings */
-					if( option == "gridsize" )
-					{
-						System.out.println( data );
+					if( option.matches( "gridsize" ) ){
+//						System.out.println( "--->gridsize: " + data );
+//						/** avoid overwriting exception print out */
+//						System.out.println(  "  " );
 					}
 					else
-						if( option == "threadblocksize " ){
-							
+						if( option.matches( "threadblocksize" ) ){
+//							System.out.println( "--->thdblksz: " + data );
+//							/** avoid overwriting exception print out */
+//							System.out.println(  "  " );
 						}
 						else 
 							/** load line number and data into sub-element */
@@ -158,6 +174,7 @@ public class ProfileMap {
 
 		} catch (IOException e) {
 
+
 			e.printStackTrace();
 		} 
 		
@@ -172,6 +189,9 @@ public class ProfileMap {
 
 
 	/**
+	 * test: note is is best to use a fairly short log file or the console
+	 * output buffer is overrun.
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -215,24 +235,14 @@ public class ProfileMap {
 		
 		for( Map.Entry<String, HashMap<Integer, String> > entry : p.get().entrySet() ){
 			
-			System.out.println( "map: " + entry.getKey() + " " + entry.getValue() );
+			System.out.println( "map: " + entry.getKey() );
 			
-//			for( Map.Entry<Integer, String> data : entry.getValue().entrySet() ){
-//				
-//				System.out.println( "data: " + data.getKey() + " " + data.getValue() );
-//				
-//			}
+			for( Map.Entry<Integer, String> data : entry.getValue().entrySet() ){
+				
+				System.out.println( "data: " + data.getKey() + " " + data.getValue() );
+				
+			}
 
-			
-
-			
-//			HashMap<Integer, String> sm = entry.getValue();
-//			
-//			for( Map.Entry<Integer, String> subentry : sm.entrySet() ){
-//				//System.out.println( "sm size " + sm.entrySet().size());
-//				
-//				//System.out.println( "submap: " + subentry.getKey() + "  " + subentry.getValue() );
-//			}
 		}
 		
 		

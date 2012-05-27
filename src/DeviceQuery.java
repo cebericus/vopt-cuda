@@ -27,6 +27,8 @@ public class DeviceQuery{
 	 * Constructor
 	 * uses JCUDA to call cuInit(), get the count of devices on system and then get
 	 * cuda attributes for each device found.
+	 * 
+	 * TODO add cudaGetDEviceProperties to check for streams capability
 	 */
     public DeviceQuery()
     {

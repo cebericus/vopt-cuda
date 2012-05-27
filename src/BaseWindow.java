@@ -29,13 +29,16 @@ import org.eclipse.swt.widgets.Button;
 public class BaseWindow {
 
 	protected Shell shlVisualProfiler;
+	
+	protected ProfileMap profile_map;
+	
 	private Text sourceCode;
 	private Text ptxCode;
 	private Text textSearchCode;
 	private Text textSearchPtx;
 	private Text txtcu;
 	private Text txtptx;
-	private Text txttxt;
+	private Label txtProfileData;
 	private Text text;
 
 	/**
@@ -43,14 +46,25 @@ public class BaseWindow {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
 		try {
 			BaseWindow window = new BaseWindow();
 			window.open();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		
 	}
 
+	/** constructor
+	 * 
+	 */
+	public BaseWindow(){
+		
+		this.profile_map = new ProfileMap();
+	}
+	
 	/**
 	 * Open the window.
 	 */
@@ -281,7 +295,7 @@ public class BaseWindow {
 		btnPrevious.setText("Previous");
 		
 		Composite compositeFiles = new Composite(compositeHistory, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		compositeFiles.setLayoutData(new RowData(241, 298));
+		compositeFiles.setLayoutData(new RowData(240, 298));
 		RowLayout rl_compositeFiles = new RowLayout(SWT.VERTICAL);
 		rl_compositeFiles.fill = true;
 		compositeFiles.setLayout(rl_compositeFiles);
@@ -295,6 +309,43 @@ public class BaseWindow {
 		lblCurrentFiles.setLayoutData(new RowData(241, SWT.DEFAULT));
 		lblCurrentFiles.setText("Current Files");
 		
+		
+		/** BEGIN profile data log-file composite */
+		Label lbltxtProfileData = new Label(compositeFiles, SWT.CENTER);
+		lbltxtProfileData.setText("profile data");
+		
+		Composite compositeProfileData = new Composite(compositeFiles, SWT.NONE);
+		compositeProfileData.setLayoutData(new RowData(230, SWT.DEFAULT));
+		compositeProfileData.setLayout(new GridLayout(2, false));
+		
+		/** label associated with profile log-file dialog */
+		txtProfileData = new Label(compositeProfileData, SWT.BORDER);
+		txtProfileData.setToolTipText("Command line profile data file.  Default name is cuda_profile_0.log.");
+		txtProfileData.setText("*.log");
+		GridData gd_txtProfileData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_txtProfileData.widthHint = 186;
+		txtProfileData.setLayoutData(gd_txtProfileData);
+		
+		/** button associated with profile log-file dialog */
+		Button buttonProfileLog = new Button(compositeProfileData, SWT.NONE);
+		buttonProfileLog.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		
+		buttonProfileLog.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				FileHandler fh = 
+						new FileHandler( BaseWindow.this.shlVisualProfiler);
+				
+				String tmp_str = fh.onLoadMap( BaseWindow.this.profile_map );
+				
+				txtProfileData.setText( tmp_str );
+			}
+		});
+		buttonProfileLog.setText("Load");
+		/** END profile data log-file composite */
+		
+		
 		Label lblcuSource = new Label(compositeFiles, SWT.CENTER);
 		lblcuSource.setText("kernel source");
 		
@@ -302,6 +353,7 @@ public class BaseWindow {
 		composite.setLayout(new GridLayout(2, false));
 		
 		txtcu = new Text(composite, SWT.BORDER);
+		txtcu.setToolTipText("                  ");
 		GridData gd_txtcu = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_txtcu.widthHint = 166;
 		txtcu.setLayoutData(gd_txtcu);
@@ -326,22 +378,6 @@ public class BaseWindow {
 		Button button = new Button(composite_1, SWT.NONE);
 		button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		button.setText("Browse");
-		
-		Label lbltxtProfileData = new Label(compositeFiles, SWT.CENTER);
-		lbltxtProfileData.setText("profile data");
-		
-		Composite composite_2 = new Composite(compositeFiles, SWT.NONE);
-		composite_2.setLayout(new GridLayout(2, false));
-		
-		txttxt = new Text(composite_2, SWT.BORDER);
-		txttxt.setText("*.txt");
-		GridData gd_txttxt = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_txttxt.widthHint = 166;
-		txttxt.setLayoutData(gd_txttxt);
-		
-		Button button_1 = new Button(composite_2, SWT.NONE);
-		button_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		button_1.setText("Browse");
 		
 		Label lbltxtCompilerMessages = new Label(compositeFiles, SWT.CENTER);
 		lbltxtCompilerMessages.setText("compiler messages");
