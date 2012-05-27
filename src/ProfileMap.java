@@ -128,7 +128,9 @@ public class ProfileMap {
 			
 			/** matches data  "=[ numbers, etc. without spaces ]" OR "[ number, number, number ]" */
 			Pattern p_dat = 
-					Pattern.compile( "(=\\[\\s([a-z]|[A-Z]|[0-9]|[,._])+\\s\\])|(\\[\\s[0-9]+\\,\\s[0-9]+\\,\\s[0-9]+\\s\\])" );
+					Pattern.compile( "(=\\[\\s([a-z]|[A-Z]|[0-9]|[,._])+\\s\\])|(=\\[\\s[0-9]+\\,\\s[0-9]+\\,\\s[0-9]+\\s\\])" );
+			
+			Pattern p_xyz = Pattern.compile( "[0-9]+" );
 
 			/** read file one line at time into buffer */
 			while( (str_data = in_f_read.readLine()) != null ){
@@ -150,15 +152,33 @@ public class ProfileMap {
 
 					/** check for xyz style option strings */
 					if( option.matches( "gridsize" ) ){
-//						System.out.println( "--->gridsize: " + data );
-//						/** avoid overwriting exception print out */
-//						System.out.println(  "  " );
+						
+						Matcher m_xyz = p_xyz.matcher( data );
+						
+						/** crude but it works */
+						m_xyz.find();
+						this.profileMap.get( "gridsizeX" ).put( line_num, m_xyz.group() );
+						
+						m_xyz.find();
+						this.profileMap.get( "gridsizeY" ).put( line_num, m_xyz.group() );
+						
+						m_xyz.find();
+						this.profileMap.get( "gridsizeZ" ).put( line_num, m_xyz.group() );
 					}
 					else
 						if( option.matches( "threadblocksize" ) ){
-//							System.out.println( "--->thdblksz: " + data );
-//							/** avoid overwriting exception print out */
-//							System.out.println(  "  " );
+							
+							Matcher m_xyz = p_xyz.matcher( data );
+							
+							/** crude but it works */
+							m_xyz.find();
+							this.profileMap.get( "threadblocksizeX" ).put( line_num, m_xyz.group() );
+							
+							m_xyz.find();
+							this.profileMap.get( "threadblocksizeY" ).put( line_num, m_xyz.group() );
+							
+							m_xyz.find();
+							this.profileMap.get( "threadblocksizeZ" ).put( line_num, m_xyz.group() );
 						}
 						else 
 							/** load line number and data into sub-element */
@@ -179,6 +199,7 @@ public class ProfileMap {
 		} 
 		
 	}
+	
 
 	/**
 	 * @return the profileMap
