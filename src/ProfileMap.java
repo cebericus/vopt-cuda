@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -17,7 +18,7 @@ import org.eclipse.swt.widgets.Shell;
  * Creates a Hashmap< String, HashMap<Integer, String> > for each profiler 
  * option keyword as the key and a subhashmap as the value.
  * Each of the sub- HashMap<Integer, String>'s is keyed with the line number and 
- * has value'e for the profile data.
+ * holds values of the profile data.
  * 
  * Profiler options currently tested (supported, others probably will fail):
  * 
@@ -190,16 +191,57 @@ public class ProfileMap {
 				++line_num;
 			}
 			
-
-
 		} catch (IOException e) {
-
-
 			e.printStackTrace();
 		} 
 		
 	}
 	
+	/**
+	 * queries all elements of profile map and assembles a list of method names
+	 * 
+	 * @return array of Strings, each element is name of CUDA method
+	 */
+	public List<String> methods(){
+		
+		List<String> methods;
+		
+		
+		
+		
+		return methods;
+	}
+	
+	/**
+	 * queries all elements of profile map, across all methods and calculates
+	 * an average value
+	 * 
+	 * @param option
+	 * @return
+	 */
+	public double average( String option ){
+		
+		double avg = 0;
+		
+		
+		return avg;
+	}
+	
+	/**
+	 * queries all elements of profile map for method and calculates an average
+	 * value for the option associated with that method
+	 * 
+	 * @param method
+	 * @param option
+	 * @return
+	 */
+	public double average( String method, String option ){
+		
+		double avg = 0;
+		
+		
+		return avg;
+	}
 
 	/**
 	 * @return the profileMap

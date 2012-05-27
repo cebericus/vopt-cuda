@@ -38,7 +38,7 @@ public class BaseWindow {
 	private Text textSearchPtx;
 	private Text txtcu;
 	private Text txtptx;
-	private Label txtProfileData;
+	private Text txtProfileData;
 	private Text text;
 
 	/**
@@ -319,7 +319,7 @@ public class BaseWindow {
 		compositeProfileData.setLayout(new GridLayout(2, false));
 		
 		/** label associated with profile log-file dialog */
-		txtProfileData = new Label(compositeProfileData, SWT.BORDER);
+		txtProfileData = new Text(compositeProfileData, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.CANCEL);
 		txtProfileData.setToolTipText("Command line profile data file.  Default name is cuda_profile_0.log.");
 		txtProfileData.setText("*.log");
 		GridData gd_txtProfileData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
