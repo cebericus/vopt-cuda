@@ -210,55 +210,68 @@ public class ProfileMap {
 		
 		String tmp_str;
 		
-		/** compose a list of all method records */
-		for( Map.Entry<Integer, String> entry : 
-								this.profileMap.get( "method" ).entrySet() ){
+		try {
+			/** compose a list of all method records */
+			for (Map.Entry<Integer, String> entry : this.profileMap.get(
+					"method").entrySet()) {
 
-			tmp_str = entry.getValue();
+				tmp_str = entry.getValue();
 
-			if( methods.contains( tmp_str ) == false ){
+				if (methods.contains(tmp_str) == false) {
 
-				methods.add( tmp_str );
+					methods.add(tmp_str);
+
+				}
 
 			}
-
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		return methods;
 	}
+	
+
 	
 	/**
 	 * queries all elements of profile map, across all methods and calculates
 	 * an average value
 	 * 
 	 * @param option
-	 * @return
+	 * @return average
 	 */
 	public double average( String option ){
 		
 		double avg = 0;
 		
+		/** stat group size */
+		int n = 0;
 		
-		return avg;
+		try {
+			
+			/** compose a list of all values for the requested option */
+			for (Map.Entry<Integer, String> entry : this.profileMap.get(option)
+					.entrySet()) {
+
+				avg = avg + Double.valueOf( entry.getValue() );
+
+				++n;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return ( avg / (double) n );
 	}
 	
-	/**
-	 * queries all elements of profile map for method and calculates an average
-	 * value for the option associated with that method
-	 * 
-	 * @param method
-	 * @param option
-	 * @return
-	 */
-	public double average( String method, String option ){
-		
-		double avg = 0;
-		
-		
-		return avg;
-	}
+
 
 	/**
+	 * TODO Note: this may be removed or made protected/private. Alternatively,
+	 * it may be altered to return a deep copy of the map to preserve data
+	 * integrity.
+	 * 
 	 * @return the profileMap
 	 */
 	public HashMap<String, HashMap<Integer, String>> get() {
@@ -331,9 +344,12 @@ public class ProfileMap {
 			System.out.println( it.next() );
 		}
 		
-		
-		
-		
+		/** test average
+		 * TODO 1. not an exhaustive test of all options, 
+		 * TODO 2. not actually validated by hand calculation
+		 */
+		System.out.println( "Average cputime over all observations: " + p.average("cputime") );
+		System.out.println( "Average occupancy over all observations: " + p.average("occupancy") );
 		
 		
 		while (!sh.isDisposed()) {
