@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -37,7 +38,8 @@ import org.eclipse.swt.widgets.Shell;
  * TODO 1. it was a mistake to not use the csv format log file. 2. if nvidia
  * changes the profile options this will probably blow up and have to be 
  * rewritten
- * 
+ * TODO integrate (something like) org.apache.commons.math.stat.*, and deprecate 
+ * current stat functions
  */
 public class ProfileMap {
 	
@@ -248,14 +250,15 @@ public class ProfileMap {
 	
 	/**
 	 * queries all elements of profile map, across all methods and calculates
-	 * an average value
+	 * an average value (mean over all conditions)
+	 * TODO should be deprecated, replaced by separate statistics class(es)
 	 * 
 	 * @param option
-	 * @return average
+	 * @return mean over all conditions
 	 */
 	public double average( String option ){
 		
-		double avg = 0;
+		double sum = 0;
 		
 		/** stat group size */
 		int n = 0;
@@ -263,10 +266,10 @@ public class ProfileMap {
 		try {
 			
 			/** compose a list of all values for the requested option */
-			for (Map.Entry<Integer, String> entry : this.profileMap.get(option)
-					.entrySet()) {
+			for (Map.Entry<Integer, String> entry : 
+										this.profileMap.get(option).entrySet()) {
 
-				avg = avg + Double.valueOf( entry.getValue() );
+				sum = sum + Double.valueOf( entry.getValue() );
 
 				++n;
 			}
@@ -275,10 +278,81 @@ public class ProfileMap {
 			e.printStackTrace();
 		}
 		
-		return ( avg / (double) n );
+		return ( sum / (double) n );
 	}
 	
+	
+	/**
+	 * queries all elements of profile map for method and calculates an average
+	 * value for the option associated with that method
+	 * TODO should be deprecated, replaced by separate statistics class(es)
+	 * 
+	 * Throws a NaN exception if not called with a Kernel function as the 
+	 * method argument.
+	 * 
+	 * @param method
+	 * @param option
+	 * @return mean over single condition
+	 */
+	public double average( String method, String option ){
 
+		double sum = 0;
+
+		/** stat group size */
+		int n = 0;
+
+		try {
+
+			/** compose a list of values for the requested option by method */
+			for( Map.Entry<Integer, String> entry : 
+									this.profileMap.get( "method" ).entrySet() ) {
+				
+				if( entry.getValue().matches( method ) ){
+
+					sum = sum + Double.valueOf( this.profileMap.get( option ).get( entry.getKey() ) );
+
+					++n;
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return ( sum / (double) n );
+	}
+
+	
+	/**
+	 * Takes the name of a valid profiling option as an argument and gives back
+	 * a sorted list of paired line numbers and values
+	 * 
+	 * @param option
+	 * @return pairs of data points
+	 */
+	public LinkedHashMap<Integer, Double> getLinkedMap( String option ){
+		
+		LinkedHashMap<Integer, Double> lhm = new LinkedHashMap<Integer, Double>();
+		
+		
+		return lhm;
+	}
+	
+	/**
+	 * Takes the name of a valid method (function) and a valid profiling option 
+	 * as an argument and gives back a sorted list of paired line numbers and values
+	 * 
+	 * @param method
+	 * @param option
+	 * @return pairs of data points
+	 */
+	public LinkedHashMap<Integer, Double> getLinkedMap( String method, String option ){
+		
+		LinkedHashMap<Integer, Double> lhm = new LinkedHashMap<Integer, Double>();
+		
+		
+		return lhm;
+	}
 
 	/**
 	 * TODO Note: this may be removed or made protected/private. Alternatively,
@@ -366,6 +440,13 @@ public class ProfileMap {
 		
 		/** List of options */
 		System.out.println( p.options() );
+		
+		/** test average for specific method/option combination */
+		/** agreed with a spot check on short example file, n = 3 */
+		System.out.println( "Average CPUtime for memcpyDtoH: " + p.average("memcpyDtoH", "cputime") );
+		
+		/** TODO gives exception NaN because the option is not available for the given method */
+		System.out.println( "Average threadblocksizeX for memcpyDtoH: " + p.average("memcpyDtoH", "threadblocksizeX") );
 		
 		while (!sh.isDisposed()) {
 			if (!display.readAndDispatch()) {
