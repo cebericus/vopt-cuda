@@ -231,7 +231,20 @@ public class ProfileMap {
 		return methods;
 	}
 	
+	/**
+	 * queries all elements of profile map and assembles a list of option names
+	 * 
+	 * @return ArrayList<String>, each element is a profiler option from the 
+	 * current log file
+	 */
+	public List<String> options(){
+		
+		List<String> options = new ArrayList<String>();
 
+		options.addAll( this.profileMap.keySet() );
+		
+		return options;
+	}
 	
 	/**
 	 * queries all elements of profile map, across all methods and calculates
@@ -351,6 +364,8 @@ public class ProfileMap {
 		System.out.println( "Average cputime over all observations: " + p.average("cputime") );
 		System.out.println( "Average occupancy over all observations: " + p.average("occupancy") );
 		
+		/** List of options */
+		System.out.println( p.options() );
 		
 		while (!sh.isDisposed()) {
 			if (!display.readAndDispatch()) {
