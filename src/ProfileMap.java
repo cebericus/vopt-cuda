@@ -287,8 +287,11 @@ public class ProfileMap {
 	 * value for the option associated with that method
 	 * TODO should be deprecated, replaced by separate statistics class(es)
 	 * 
-	 * Throws a NaN exception if not called with a Kernel function as the 
-	 * method argument.
+	 * Throws a NaN exception if called with a Kernel function as the 
+	 * method argument and an unavailable option is requested, ie the option 
+	 * memtransfer....
+	 * Alternatively, same exception if method is a memcpy function and a
+	 * kernel specific option ie. gridsizeX is asked for.
 	 * 
 	 * @param method
 	 * @param option
