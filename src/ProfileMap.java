@@ -29,6 +29,9 @@ import org.eclipse.swt.widgets.Shell;
  * cacheconfigexecuted, countermodeaggregate, warp_serialize, gld_incoherent,
  * gst_incoherent
  * 
+ * Pretty much any method except ProfileMap.parse() that is called before a log 
+ * file is loaded will throw an exception, likely NaN or NullPointer.
+ * 
  * 
  * Team 4b: Michael Barger, Alex Kelly, Cole Nelson
  * @author nelsoncs 2012-May-20. 
@@ -247,6 +250,69 @@ public class ProfileMap {
 		return options;
 	}
 	
+	
+	/**
+	 * 
+	 * @param method
+	 * @param options
+	 * @return filtered list of methods
+	 */
+	public List<String> filterByMethod( String method, List<String> options ){
+		
+		List<String> l = new ArrayList<String>();
+		
+		/** filter for memcpy methods */
+		if( method.matches( "memcpy.+" ) ){
+			System.out.println( method + ": " + options );
+
+			/** remove all but *times and mem* */
+			for( Iterator<String> it = options.iterator(); it.hasNext(); ){
+				System.out.println( "it:" + it. );
+
+				if( it.next().matches( "(\\s.+time)|(mem.+,)" ) == false ){
+
+					System.out.println( "it false:" + it );
+					it.remove();
+				}
+			}
+		}
+		
+		return l;
+	}
+	
+	/**
+	 * 
+	 * @param option
+	 * @return
+	 */
+	public double n_option( String option ){
+		
+		/** stat group size */
+		int n = 0;
+		
+		try {
+			
+			/** compose a list of all values for the requested option */
+			for (Map.Entry<Integer, String> entry : 
+										this.profileMap.get(option).entrySet()) {
+				++n;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return (double) n;
+	}
+	
+	public double n_method( String method ){
+
+	}
+	
+	public double n_overall(){
+
+	}
+	
 	/**
 	 * queries all elements of profile map, across all methods and calculates
 	 * an average value (mean over all conditions)
@@ -448,7 +514,11 @@ public class ProfileMap {
 		System.out.println( "Average CPUtime for memcpyDtoH: " + p.average("memcpyDtoH", "cputime") );
 		
 		/** TODO gives exception NaN because the option is not available for the given method */
-		System.out.println( "Average threadblocksizeX for memcpyDtoH: " + p.average("memcpyDtoH", "threadblocksizeX") );
+		//System.out.println( "Average threadblocksizeX for memcpyDtoH: " + p.average("memcpyDtoH", "threadblocksizeX") );
+		
+		/** filtering */
+		System.out.println( "unfiltered: " + p.options() );
+		System.out.println( "filtered: " + p.filterByMethod( "memcpyDtoH", p.options() ) );
 		
 		while (!sh.isDisposed()) {
 			if (!display.readAndDispatch()) {

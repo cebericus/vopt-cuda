@@ -197,14 +197,14 @@ public class BaseWindow {
 		compositeProgressBars.setLayout(new GridLayout(1, false));
 		GridData gd_compositeProgressBars = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1);
 		gd_compositeProgressBars.heightHint = 375;
-		gd_compositeProgressBars.widthHint = 261;
+		gd_compositeProgressBars.widthHint = 270;
 		compositeProgressBars.setLayoutData(gd_compositeProgressBars);
 		
 		/** Title and profile log file dialog */
-		Composite compositeProfileData = new Composite(compositeProgressBars, SWT.NONE);
+		Composite compositeProfileData = new Composite(compositeProgressBars, SWT.BORDER);
 		compositeProfileData.setLocation(0, 0);
 		compositeProfileData.setLayout(new GridLayout(3, false));
-		Label lblProfileData = new Label(compositeProfileData, SWT.BORDER | SWT.CENTER);
+		Label lblProfileData = new Label(compositeProfileData, SWT.CENTER);
 		GridData gd_lblProfileData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 3, 1);
 		gd_lblProfileData.widthHint = 246;
 		lblProfileData.setLayoutData(gd_lblProfileData);
@@ -223,11 +223,11 @@ public class BaseWindow {
 		
 		/** Methods combo selector box */
 		/** placed BEFORE log file dialog so that file dialog can populate coms */
-		Composite compositeMethodsCombo = new Composite(compositeProgressBars, SWT.NONE);
+		Composite compositeMethodsCombo = new Composite(compositeProgressBars, SWT.BORDER);
 		Label lblComboMethods = new Label(compositeMethodsCombo, SWT.CENTER);
 		lblComboMethods.setLocation(0, 0);
 		lblComboMethods.setAlignment(SWT.CENTER);
-		lblComboMethods.setSize(256, 14);
+		lblComboMethods.setSize(256, 20);
 		lblComboMethods.setText("Methods");
 		
 		this.comboMethods = new Combo(compositeMethodsCombo, SWT.NONE);
@@ -235,12 +235,15 @@ public class BaseWindow {
 		//comboMethods.setItems(items)
 		
 		/** Options combo selector box */
-		Composite compositeOptionsCombo = new Composite(compositeProgressBars, SWT.NONE);
+		Composite compositeOptionsCombo = new Composite(compositeProgressBars, SWT.BORDER);
+		GridData gd_compositeOptionsCombo = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_compositeOptionsCombo.heightHint = 58;
+		compositeOptionsCombo.setLayoutData(gd_compositeOptionsCombo);
 		//compositeOptionsCombo.setLayoutData(new RowData(260, 59));
 		Label lblOptions = new Label(compositeOptionsCombo, SWT.CENTER);
-		lblOptions.setLocation(0, 0);
+		lblOptions.setLocation(0, 7);
 		lblOptions.setAlignment(SWT.CENTER);
-		lblOptions.setSize(256, 14);
+		lblOptions.setSize(256, 20);
 		lblOptions.setText("Options");
 
 		
@@ -293,6 +296,7 @@ public class BaseWindow {
 				}
 				
 				/** populate the progress bars with "All" as default */
+				
 			}
 		});
 		
@@ -428,16 +432,6 @@ public class BaseWindow {
 		lblCurrentFiles.setFont(SWTResourceManager.getFont("Ubuntu", 11, SWT.BOLD));
 		lblCurrentFiles.setLayoutData(new RowData(241, SWT.DEFAULT));
 		lblCurrentFiles.setText("Current Files");
-		
-		
-//		/** BEGIN profile data log-file composite */
-//		Label lbltxtProfileData = new Label(compositeFiles, SWT.CENTER);
-//		lbltxtProfileData.setText("profile data");
-//		
-//		/** label associated with profile log-file dialog */
-//		
-//		/** button associated with profile log-file dialog */
-//		/** END profile data log-file composite */
 		
 		
 		Label lblcuSource = new Label(compositeFiles, SWT.CENTER);
