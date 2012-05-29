@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,11 +34,11 @@ import org.eclipse.swt.widgets.Shell;
  * @author nelsoncs 2012-May-20. 
  * 
  * TODO does not yet account for a badly formed profile.log file.
- * TODO 1. it was a mistake to not use the csv format log file. 2. if nvidia
- * changes the profile options this will probably blow up and have to be 
- * rewritten
+ * TODO 1. it probably was a mistake to not use the csv format log file. 2. if 
+ * nvidia changes the profile options this will probably blow up and have to be 
+ * rewritten.
  * TODO integrate (something like) org.apache.commons.math.stat.*, and deprecate 
- * current stat functions
+ * current stat functions.
  */
 public class ProfileMap {
 	
@@ -214,8 +213,8 @@ public class ProfileMap {
 		
 		try {
 			/** compose a list of all method records */
-			for (Map.Entry<Integer, String> entry : this.profileMap.get(
-					"method").entrySet()) {
+			for (Map.Entry<Integer, String> entry : 
+									this.profileMap.get("method").entrySet()) {
 
 				tmp_str = entry.getValue();
 
