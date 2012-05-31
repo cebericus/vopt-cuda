@@ -280,25 +280,39 @@ public class ProfileMap {
 		
 		List<String> l = new ArrayList<String>();
 		
+		String tmp_str;
+		
 		try {
 			/** filter for memcpy methods */
 			if (method.matches("memcpy.+")) {
 
-<<<<<<< HEAD
-			/** remove all but *times and mem* */
-			for( Iterator<String> it = options.iterator(); it.hasNext(); ){
-				System.out.println( "it:" + it );
-=======
 				/** remove all but *times and mem* */
 				for (Iterator<String> it = options.iterator(); it.hasNext();) {
->>>>>>> 3ee739a5db54eb6258a58f5c1507d8bf8f8bfbb8
 
-					if (it.next().matches("[cg]putime") == false) {
+					tmp_str = it.next();
+					
+					if ( tmp_str.matches( "([cg]putime)|(mem.+)" ) == true ) {
 
-						it.remove();
+						l.add( tmp_str );
 					}
 				}
 			}
+			//else ?? - need to examine usage before using else
+			// TODO remove else if can test for (individual) mangled kernel names
+			else
+			{
+				/** remove all  mem*, grid*, thread* and method */
+				for (Iterator<String> it = options.iterator(); it.hasNext();) {
+
+					tmp_str = it.next();
+
+					if ( tmp_str.matches( "(mem.+)|(grid.+)|(thread.+)|(method)" ) == false ) {
+
+						l.add( tmp_str );
+					}
+				}
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -351,9 +365,6 @@ public class ProfileMap {
 			for (Map.Entry<Integer, String> entry : 
 									this.profileMap.get("method").entrySet()) {
 
-<<<<<<< HEAD
-		double n = 0;
-=======
 				tmp_str = entry.getValue();
 
 				if ( method.contentEquals( tmp_str) ) {
@@ -365,7 +376,6 @@ public class ProfileMap {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
->>>>>>> 3ee739a5db54eb6258a58f5c1507d8bf8f8bfbb8
 		
 		return n;
 	}
@@ -378,13 +388,8 @@ public class ProfileMap {
 	 */
 	public double n_overall(){
 
-<<<<<<< HEAD
-		double n = 0;
-		
-		return n;
-=======
 		return (double) this.profileMap.get("method").size();
->>>>>>> 3ee739a5db54eb6258a58f5c1507d8bf8f8bfbb8
+
 	}
 	
 	
@@ -610,6 +615,10 @@ public class ProfileMap {
 		/** filtering */
 		System.out.println( "unfiltered: " + p.options() );
 		System.out.println( "filtered: " + p.filterByMethod( "memcpyDtoH", p.options() ) );
+		
+		System.out.println( "unfiltered: " + p.options() );
+		System.out.println( "filtered: " + p.filterByMethod( "_ZtrashP_", p.options() ) );
+		
 		
 		while (!sh.isDisposed()) {
 			if (!display.readAndDispatch()) {
