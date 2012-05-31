@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Shell;
 public class ProfileMap {
 	
 	/**
-	 * Structure use to store profile data.  
+	 * Structure used to store profile data.  
 	 * HashMap< key:option_name, value:HashMap< key:line_number, value:string_value> >
 	 * 
 	 * Where option_name is one of: method, cputime, gputime, etc.
@@ -55,6 +55,7 @@ public class ProfileMap {
 	 *             string_value is: profile data.
 	 */
 	protected HashMap<String, HashMap<Integer, String> > profileMap;
+	
 	
 	/**
 	 * constructor
