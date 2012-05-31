@@ -261,26 +261,28 @@ public class ProfileMap {
 		
 		List<String> l = new ArrayList<String>();
 		
-		/** filter for memcpy methods */
-		if( method.matches( "memcpy.+" ) ){
-			System.out.println( method + ": " + options );
+		try {
+			/** filter for memcpy methods */
+			if (method.matches("memcpy.+")) {
 
-			/** remove all but *times and mem* */
-			for( Iterator<String> it = options.iterator(); it.hasNext(); ){
-				System.out.println( "it:" + it. );
+				/** remove all but *times and mem* */
+				for (Iterator<String> it = options.iterator(); it.hasNext();) {
 
-				if( it.next().matches( "(\\s.+time)|(mem.+,)" ) == false ){
+					if (it.next().matches("(\\s.+time)|(mem.+,)") == false) {
 
-					System.out.println( "it false:" + it );
-					it.remove();
+						it.remove();
+					}
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		return l;
 	}
 	
 	/**
+	 * count occurrences of the requested option 
 	 * 
 	 * @param option
 	 * @return
@@ -292,7 +294,7 @@ public class ProfileMap {
 		
 		try {
 			
-			/** compose a list of all values for the requested option */
+			/** count occurrences of the requested option */
 			for (Map.Entry<Integer, String> entry : 
 										this.profileMap.get(option).entrySet()) {
 				++n;
@@ -305,12 +307,42 @@ public class ProfileMap {
 		return (double) n;
 	}
 	
+	
+	/**
+	 * count occurrences of the requested method record
+	 * 
+	 * @param method
+	 * @return
+	 */
 	public double n_method( String method ){
+		
+		double n = 0;
+		
+		String tmp_str;
+		
+		try {
+			/** count occurrences of the requested method record */
+			for (Map.Entry<Integer, String> entry : 
+									this.profileMap.get("method").entrySet()) {
 
+				tmp_str = entry.getValue();
+
+				if ( method.contentEquals( tmp_str) ) {
+
+					++n;
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return n;
 	}
 	
 	public double n_overall(){
 
+		return (double) this.profileMap.get("method").size();
 	}
 	
 	/**
@@ -498,6 +530,20 @@ public class ProfileMap {
 		for( Iterator<String> it = l.iterator(); it.hasNext(); ){
 			System.out.println( it.next() );
 		}
+		
+		/** test n_method */
+		System.out.println( "memcpyHtoD - n = " + p.n_method( "memcpyHtoD" ) );
+		System.out.println( "memcpyDtoH - n = " + p.n_method( "memcpyDtoH" ) );
+		System.out.println( "memcpyDtoD - n = " + p.n_method( "memcpyDtoD" ) );
+		
+		/** test n_option */
+		System.out.println( "cputime - n = " + p.n_option( "cputime" ) );
+		System.out.println( "gputime - n = " + p.n_option( "gputime" ) );
+		System.out.println( "memtransferdir - n = " + p.n_option( "memtransferdir" ) );
+		//System.out.println( "memcpyDtoD - n = " + p.n_option( "trash2384Y_" ) );
+		
+		/** test n_overall */
+		System.out.println( "n = " + p.n_overall() );
 		
 		/** test average
 		 * TODO 1. not an exhaustive test of all options, 
