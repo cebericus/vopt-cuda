@@ -57,6 +57,13 @@ public class ProfileMap {
 	}
 	
 	
+	/**
+	 * Locates first line of profile data and reads file into data structure, 
+	 * line-by-line.  This function needs to be called before using any of the 
+	 * other functions in this class.
+	 * 
+	 * @param in_f_read
+	 */
 	public void parse(BufferedReader in_f_read ){
 		
 		String str = new String();
@@ -235,6 +242,7 @@ public class ProfileMap {
 		return methods;
 	}
 	
+	
 	/**
 	 * queries all elements of profile map and assembles a list of option names
 	 * 
@@ -252,6 +260,7 @@ public class ProfileMap {
 	
 	
 	/**
+	 * in progress
 	 * 
 	 * @param method
 	 * @param options
@@ -268,7 +277,7 @@ public class ProfileMap {
 				/** remove all but *times and mem* */
 				for (Iterator<String> it = options.iterator(); it.hasNext();) {
 
-					if (it.next().matches("(\\s.+time)|(mem.+,)") == false) {
+					if (it.next().matches("[cg]putime") == false) {
 
 						it.remove();
 					}
@@ -280,6 +289,7 @@ public class ProfileMap {
 		
 		return l;
 	}
+	
 	
 	/**
 	 * count occurrences of the requested option 
@@ -340,10 +350,17 @@ public class ProfileMap {
 		return n;
 	}
 	
+	
+	/**
+	 * count all observations (number of profile lines)
+	 * 
+	 * @return
+	 */
 	public double n_overall(){
 
 		return (double) this.profileMap.get("method").size();
 	}
+	
 	
 	/**
 	 * queries all elements of profile map, across all methods and calculates
@@ -438,6 +455,7 @@ public class ProfileMap {
 		return lhm;
 	}
 	
+	
 	/**
 	 * Takes the name of a valid method (function) and a valid profiling option 
 	 * as an argument and gives back a sorted list of paired line numbers and values
@@ -454,6 +472,7 @@ public class ProfileMap {
 		return lhm;
 	}
 
+	
 	/**
 	 * TODO Note: this may be removed or made protected/private. Alternatively,
 	 * it may be altered to return a deep copy of the map to preserve data
