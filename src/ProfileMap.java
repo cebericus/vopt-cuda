@@ -45,7 +45,17 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class ProfileMap {
 	
+	/**
+	 * Structure used to store profile data.  
+	 * HashMap< key:option_name, value:HashMap< key:line_number, value:string_value> >
+	 * 
+	 * Where option_name is one of: method, cputime, gputime, etc.
+	 *              line_number is: one-based count of profile data lines, 
+	 *                              not file lines
+	 *             string_value is: profile data.
+	 */
 	protected HashMap<String, HashMap<Integer, String> > profileMap;
+	
 	
 	/**
 	 * constructor
@@ -57,6 +67,13 @@ public class ProfileMap {
 	}
 	
 	
+	/**
+	 * Locates first line of profile data and reads file into data structure, 
+	 * line-by-line.  This function needs to be called before using any of the 
+	 * other functions in this class.
+	 * 
+	 * @param in_f_read
+	 */
 	public void parse(BufferedReader in_f_read ){
 		
 		String str = new String();
@@ -235,6 +252,7 @@ public class ProfileMap {
 		return methods;
 	}
 	
+	
 	/**
 	 * queries all elements of profile map and assembles a list of option names
 	 * 
@@ -252,6 +270,7 @@ public class ProfileMap {
 	
 	
 	/**
+	 * in progress
 	 * 
 	 * @param method
 	 * @param options
@@ -261,26 +280,35 @@ public class ProfileMap {
 		
 		List<String> l = new ArrayList<String>();
 		
-		/** filter for memcpy methods */
-		if( method.matches( "memcpy.+" ) ){
-			System.out.println( method + ": " + options );
+		try {
+			/** filter for memcpy methods */
+			if (method.matches("memcpy.+")) {
 
+<<<<<<< HEAD
 			/** remove all but *times and mem* */
 			for( Iterator<String> it = options.iterator(); it.hasNext(); ){
 				System.out.println( "it:" + it );
+=======
+				/** remove all but *times and mem* */
+				for (Iterator<String> it = options.iterator(); it.hasNext();) {
+>>>>>>> 3ee739a5db54eb6258a58f5c1507d8bf8f8bfbb8
 
-				if( it.next().matches( "(\\s.+time)|(mem.+,)" ) == false ){
+					if (it.next().matches("[cg]putime") == false) {
 
-					System.out.println( "it false:" + it );
-					it.remove();
+						it.remove();
+					}
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		return l;
 	}
 	
+	
 	/**
+	 * count occurrences of the requested option 
 	 * 
 	 * @param option
 	 * @return
@@ -292,7 +320,7 @@ public class ProfileMap {
 		
 		try {
 			
-			/** compose a list of all values for the requested option */
+			/** count occurrences of the requested option */
 			for (Map.Entry<Integer, String> entry : 
 										this.profileMap.get(option).entrySet()) {
 				++n;
@@ -305,19 +333,60 @@ public class ProfileMap {
 		return (double) n;
 	}
 	
+	
+	/**
+	 * count occurrences of the requested method record
+	 * 
+	 * @param method
+	 * @return
+	 */
 	public double n_method( String method ){
-
+		
 		double n = 0;
+		
+		String tmp_str;
+		
+		try {
+			/** count occurrences of the requested method record */
+			for (Map.Entry<Integer, String> entry : 
+									this.profileMap.get("method").entrySet()) {
+
+<<<<<<< HEAD
+		double n = 0;
+=======
+				tmp_str = entry.getValue();
+
+				if ( method.contentEquals( tmp_str) ) {
+
+					++n;
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+>>>>>>> 3ee739a5db54eb6258a58f5c1507d8bf8f8bfbb8
 		
 		return n;
 	}
 	
+	
+	/**
+	 * count all observations (number of profile lines)
+	 * 
+	 * @return
+	 */
 	public double n_overall(){
 
+<<<<<<< HEAD
 		double n = 0;
 		
 		return n;
+=======
+		return (double) this.profileMap.get("method").size();
+>>>>>>> 3ee739a5db54eb6258a58f5c1507d8bf8f8bfbb8
 	}
+	
 	
 	/**
 	 * queries all elements of profile map, across all methods and calculates
@@ -412,6 +481,7 @@ public class ProfileMap {
 		return lhm;
 	}
 	
+	
 	/**
 	 * Takes the name of a valid method (function) and a valid profiling option 
 	 * as an argument and gives back a sorted list of paired line numbers and values
@@ -428,6 +498,7 @@ public class ProfileMap {
 		return lhm;
 	}
 
+	
 	/**
 	 * TODO Note: this may be removed or made protected/private. Alternatively,
 	 * it may be altered to return a deep copy of the map to preserve data
@@ -492,7 +563,7 @@ public class ProfileMap {
 			
 			for( Map.Entry<Integer, String> data : entry.getValue().entrySet() ){
 				
-				System.out.println( "data: " + data.getKey() + " " + data.getValue() );
+				//System.out.println( "data: " + data.getKey() + " " + data.getValue() );
 				
 			}
 
@@ -504,6 +575,20 @@ public class ProfileMap {
 		for( Iterator<String> it = l.iterator(); it.hasNext(); ){
 			System.out.println( it.next() );
 		}
+		
+		/** test n_method */
+		System.out.println( "memcpyHtoD - n = " + p.n_method( "memcpyHtoD" ) );
+		System.out.println( "memcpyDtoH - n = " + p.n_method( "memcpyDtoH" ) );
+		System.out.println( "memcpyDtoD - n = " + p.n_method( "memcpyDtoD" ) );
+		
+		/** test n_option */
+		System.out.println( "cputime - n = " + p.n_option( "cputime" ) );
+		System.out.println( "gputime - n = " + p.n_option( "gputime" ) );
+		System.out.println( "memtransferdir - n = " + p.n_option( "memtransferdir" ) );
+		//System.out.println( "memcpyDtoD - n = " + p.n_option( "trash2384Y_" ) );
+		
+		/** test n_overall */
+		System.out.println( "n = " + p.n_overall() );
 		
 		/** test average
 		 * TODO 1. not an exhaustive test of all options, 
