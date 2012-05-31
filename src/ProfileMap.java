@@ -267,7 +267,7 @@ public class ProfileMap {
 
 			/** remove all but *times and mem* */
 			for( Iterator<String> it = options.iterator(); it.hasNext(); ){
-				System.out.println( "it:" + it. );
+				System.out.println( "it:" + it );
 
 				if( it.next().matches( "(\\s.+time)|(mem.+,)" ) == false ){
 
@@ -307,10 +307,16 @@ public class ProfileMap {
 	
 	public double n_method( String method ){
 
+		double n = 0;
+		
+		return n;
 	}
 	
 	public double n_overall(){
 
+		double n = 0;
+		
+		return n;
 	}
 	
 	/**
