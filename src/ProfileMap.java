@@ -17,21 +17,26 @@ import org.eclipse.swt.widgets.Shell;
 
 
 /**
- * Creates a Hashmap< String, HashMap<Integer, String> > for each profiler 
- * option keyword as the key and a subhashmap as the value.
+ * Creates a Hashmap< String option, HashMap<Integer line_number, String data> > 
+ * for each profiler option keyword as the primary key and a sub-hashmap as the value.
+ * 
  * Each of the sub- HashMap<Integer, String>'s is keyed with the line number and 
  * holds values of the profile data.
  * 
- * Profiler options currently tested (supported, others probably will fail):
+ * Profiler options currently tested (supported, others could fail):
  * 
  * gridsize3d, threadblocksize, stasmemperblock, dynmemperblock, regperthread
  * memtransferdir, memtransfersize, memtransferhostmemtype, cacheconfigrequested
  * cacheconfigexecuted, countermodeaggregate, warp_serialize, gld_incoherent,
- * gst_incoherent
+ * gst_incoherent, method.
  * 
- * Pretty much any method except ProfileMap.parse() that is called before a log 
+ * Note that "method" is treated as just another profiler option.
+ * 
+ * Pretty much any class function that is called before a profiler log 
  * file is loaded will throw an exception, likely NaN or NullPointer.
  * 
+ * The exception is ProfileMap.parse(), which should be called before all other
+ * functions. 
  * 
  * Team 4b: Michael Barger, Alex Kelly, Cole Nelson
  * @author nelsoncs 2012-May-20. 
@@ -476,13 +481,29 @@ public class ProfileMap {
 	 * a sorted list of paired line numbers and values
 	 * 
 	 * @param option
-	 * @return pairs of data points
+	 * @return pairs of data points, rejects "method" and returns empty data
+	 * structure, invalid option string will give a null pointer exception.
 	 */
 	public LinkedHashMap<Integer, Double> getLinkedMap( String option ){
 		
 		LinkedHashMap<Integer, Double> lhm = new LinkedHashMap<Integer, Double>();
 		
-		
+		if( option.matches("method") == false ){
+			
+			try {
+
+				/** compose a list of all values for the requested option */
+				for (Map.Entry<Integer, String> entry : 
+					this.profileMap.get(option).entrySet()) {
+
+					lhm.put(entry.getKey(), Double.valueOf( entry.getValue() ) );
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		return lhm;
 	}
 	
@@ -493,13 +514,40 @@ public class ProfileMap {
 	 * 
 	 * @param method
 	 * @param option
-	 * @return pairs of data points
+	 * @return pairs of data points, see warnings for sibling function.
 	 */
 	public LinkedHashMap<Integer, Double> getLinkedMap( String method, String option ){
 		
 		LinkedHashMap<Integer, Double> lhm = new LinkedHashMap<Integer, Double>();
 		
-		
+		/* line count */
+		Integer n = 0;
+
+		if( option.matches("method") == false ){
+
+			try {
+
+				/** compose a list of all values for the requested option */
+				for (Map.Entry<Integer, String> entry : 
+					this.profileMap.get(option).entrySet()) {
+
+					if( this.profileMap.get("method").get( entry.getKey() ).matches(method) ){
+
+						++n;
+
+						/** to validate, comment out"lhm.put( n, ..." and uncomment 
+						 * line with "put.(entry.getkey()...."
+						 */
+						//lhm.put(entry.getKey(), Double.valueOf( entry.getValue() ) );
+						lhm.put( n, Double.valueOf( entry.getValue() ) );
+					}
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		return lhm;
 	}
 
@@ -612,13 +660,25 @@ public class ProfileMap {
 		/** TODO gives exception NaN because the option is not available for the given method */
 		//System.out.println( "Average threadblocksizeX for memcpyDtoH: " + p.average("memcpyDtoH", "threadblocksizeX") );
 		
-		/** filtering */
+		/** test filtering */
 		System.out.println( "unfiltered: " + p.options() );
 		System.out.println( "filtered: " + p.filterByMethod( "memcpyDtoH", p.options() ) );
 		
 		System.out.println( "unfiltered: " + p.options() );
 		System.out.println( "filtered: " + p.filterByMethod( "_ZtrashP_", p.options() ) );
 		
+		/** test extraction of paired data points by option, all methods */
+		LinkedHashMap<Integer, Double> lhm = new LinkedHashMap<Integer, Double>();
+		lhm = p.getLinkedMap("gputime");
+		System.out.println( "lhm : " + lhm );
+		lhm = p.getLinkedMap("method");
+		System.out.println( "lhm : " + lhm );
+		lhm = p.getLinkedMap("trash");
+		System.out.println( "lhm : " + lhm );
+		
+		/** test extraction of paired data points by option, specific methods */
+		lhm = p.getLinkedMap( "memcpyDtoD",  "gputime");
+		System.out.println( "lhm : " + lhm );
 		
 		while (!sh.isDisposed()) {
 			if (!display.readAndDispatch()) {
