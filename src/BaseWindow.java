@@ -112,7 +112,25 @@ public class BaseWindow {
 		shlVisualProfiler = new Shell();
 		shlVisualProfiler.setForeground(SWTResourceManager.getColor(76, 76, 76));
 		shlVisualProfiler.setSize(1280, 720);
-		shlVisualProfiler.setText("Visual Profiler 4b");
+		
+		String devs_title = new String();
+		
+		try {
+			/** query for GPU(s) and put info in title bar */
+			DeviceQuery devices = new DeviceQuery();
+			
+			for( int i = 0; i < devices.getDeviceCount(); ++i ){
+				
+				devs_title = devs_title + " - Devices found: " + "(" + i + ") " + devices.get()[i].getName();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			devs_title = "DeviceQuery Exception - CUDA Devices not found or unknown.";
+		}
+		
+		
+		shlVisualProfiler.setText("VOT - Visual Occupancy Tool" + devs_title );
 		GridLayout gl_shlVisualProfiler = new GridLayout(5, true);
 		shlVisualProfiler.setLayout(gl_shlVisualProfiler);
 		
@@ -123,35 +141,35 @@ public class BaseWindow {
 		Menu menuMain = new Menu(shlVisualProfiler, SWT.BAR);
 		shlVisualProfiler.setMenuBar(menuMain);
 		
-		MenuItem mntmFile = new MenuItem(menuMain, SWT.CASCADE);
-		mntmFile.setText("File");
-		
-		Menu menuFile = new Menu(mntmFile);
-		mntmFile.setMenu(menuFile);
-		
-		MenuItem mntmNewItem = new MenuItem(menuFile, SWT.NONE);
-		mntmNewItem.addListener(SWT.Activate, new Listener() {
-			public void handleEvent(Event e) {
-				
-			}
-		});
-		mntmNewItem.setText("New");
-		
-		MenuItem mntmOpen = new MenuItem(menuFile, SWT.NONE);
-		mntmOpen.addSelectionListener(new SelectionAdapter() {
+//		MenuItem mntmFile = new MenuItem(menuMain, SWT.CASCADE);
+//		mntmFile.setText("File");
+//		
+//		Menu menuFile = new Menu(mntmFile);
+//		mntmFile.setMenu(menuFile);
+//		
+//		MenuItem mntmNewItem = new MenuItem(menuFile, SWT.NONE);
+//		mntmNewItem.addListener(SWT.Activate, new Listener() {
+//			public void handleEvent(Event e) {
+//				
+//			}
+//		});
+//		mntmNewItem.setText("New");
+//		
+//		MenuItem mntmOpen = new MenuItem(menuFile, SWT.NONE);
+//		mntmOpen.addSelectionListener(new SelectionAdapter() {
+//
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				FileHandler fh = 
+//						new FileHandler( BaseWindow.this.shlVisualProfiler);
+//
+//				fh.onLoad( sourceCode );
+//				fh.onLoad( ptxCode );
+//			}
+//		});
+//		mntmOpen.setText("Open");
 
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				FileHandler fh = 
-						new FileHandler( BaseWindow.this.shlVisualProfiler);
-
-				fh.onLoad( sourceCode );
-				fh.onLoad( ptxCode );
-			}
-		});
-		mntmOpen.setText("Open");
-
-		MenuItem mntmExit = new MenuItem(menuFile, SWT.NONE);
+		MenuItem mntmExit = new MenuItem(menuMain, SWT.NONE);
 		mntmExit.addSelectionListener(new SelectionAdapter() {
 			
 			@Override
@@ -405,90 +423,90 @@ public class BaseWindow {
 		
 		/** END Canvas Drawing Area */
 		
-		Composite compositeHistory = new Composite(shlVisualProfiler, SWT.NONE);
-		compositeHistory.setLayout(new RowLayout(SWT.VERTICAL));
-		GridData gd_compositeHistory = new GridData(SWT.CENTER, SWT.FILL, false, false, 1, 3);
-		gd_compositeHistory.widthHint = 248;
-		compositeHistory.setLayoutData(gd_compositeHistory);
-		
-		Canvas canvasPrevious = new CanvasGPU(compositeHistory, SWT.NONE);
-		canvasPrevious.setLayoutData(new RowData(243, 166));
-		
-		Button btnPrevious = new Button(canvasPrevious, SWT.NONE);
-		btnPrevious.setBounds(10, 10, 81, 26);
-		btnPrevious.setText("Previous");
-		
-		Composite compositeFiles = new Composite(compositeHistory, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		compositeFiles.setLayoutData(new RowData(240, 298));
-		RowLayout rl_compositeFiles = new RowLayout(SWT.VERTICAL);
-		rl_compositeFiles.fill = true;
-		compositeFiles.setLayout(rl_compositeFiles);
-		GridData gd_compositeFiles = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1);
-		gd_compositeFiles.heightHint = 375;
-		gd_compositeFiles.widthHint = 248;
-		compositeFiles.setLayout(rl_compositeFiles);
-		
-		Label lblCurrentFiles = new Label(compositeFiles, SWT.CENTER);
-		lblCurrentFiles.setFont(SWTResourceManager.getFont("Ubuntu", 11, SWT.BOLD));
-		lblCurrentFiles.setLayoutData(new RowData(241, SWT.DEFAULT));
-		lblCurrentFiles.setText("Current Files");
-		
-		
-		Label lblcuSource = new Label(compositeFiles, SWT.CENTER);
-		lblcuSource.setText("kernel source");
-		
-		Composite composite = new Composite(compositeFiles, SWT.NONE);
-		composite.setLayout(new GridLayout(2, false));
-		
-		txtcu = new Text(composite, SWT.BORDER);
-		txtcu.setToolTipText("                  ");
-		GridData gd_txtcu = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_txtcu.widthHint = 166;
-		txtcu.setLayoutData(gd_txtcu);
-		txtcu.setText("*.cu");
-		
-		Button btnBrowse = new Button(composite, SWT.NONE);
-		btnBrowse.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		btnBrowse.setText("Browse");
-		
-		Label lblptxSource = new Label(compositeFiles, SWT.CENTER);
-		lblptxSource.setText("ptx source");
-		
-		Composite composite_1 = new Composite(compositeFiles, SWT.NONE);
-		composite_1.setLayout(new GridLayout(2, false));
-		
-		txtptx = new Text(composite_1, SWT.BORDER);
-		txtptx.setText("*.ptx");
-		GridData gd_txtptx = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_txtptx.widthHint = 166;
-		txtptx.setLayoutData(gd_txtptx);
-		
-		Button button = new Button(composite_1, SWT.NONE);
-		button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		button.setText("Browse");
-		
-		Label lbltxtCompilerMessages = new Label(compositeFiles, SWT.CENTER);
-		lbltxtCompilerMessages.setText("compiler messages");
-		
-		Composite composite_3 = new Composite(compositeFiles, SWT.NONE);
-		composite_3.setLayout(new GridLayout(2, false));
-		
-		text = new Text(composite_3, SWT.BORDER);
-		text.setText("*.txt");
-		GridData gd_text = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_text.widthHint = 166;
-		text.setLayoutData(gd_text);
-		
-		Button button_2 = new Button(composite_3, SWT.NONE);
-		button_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		button_2.setText("Browse");
-		
-		Canvas canvasNext = new CanvasGPU(compositeHistory, SWT.NONE);
-		canvasNext.setLayoutData(new RowData(244, 183));
-		
-		Button btnNext = new Button(canvasNext, SWT.NONE);
-		btnNext.setBounds(10, 10, 81, 26);
-		btnNext.setText("Next");
+//		Composite compositeHistory = new Composite(shlVisualProfiler, SWT.NONE);
+//		compositeHistory.setLayout(new RowLayout(SWT.VERTICAL));
+//		GridData gd_compositeHistory = new GridData(SWT.CENTER, SWT.FILL, false, false, 1, 3);
+//		gd_compositeHistory.widthHint = 248;
+//		compositeHistory.setLayoutData(gd_compositeHistory);
+//		
+//		Canvas canvasPrevious = new CanvasGPU(compositeHistory, SWT.NONE);
+//		canvasPrevious.setLayoutData(new RowData(243, 166));
+//		
+//		Button btnPrevious = new Button(canvasPrevious, SWT.NONE);
+//		btnPrevious.setBounds(10, 10, 81, 26);
+//		btnPrevious.setText("Previous");
+//		
+//		Composite compositeFiles = new Composite(compositeHistory, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+//		compositeFiles.setLayoutData(new RowData(240, 298));
+//		RowLayout rl_compositeFiles = new RowLayout(SWT.VERTICAL);
+//		rl_compositeFiles.fill = true;
+//		compositeFiles.setLayout(rl_compositeFiles);
+//		GridData gd_compositeFiles = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1);
+//		gd_compositeFiles.heightHint = 375;
+//		gd_compositeFiles.widthHint = 248;
+//		compositeFiles.setLayout(rl_compositeFiles);
+//		
+//		Label lblCurrentFiles = new Label(compositeFiles, SWT.CENTER);
+//		lblCurrentFiles.setFont(SWTResourceManager.getFont("Ubuntu", 11, SWT.BOLD));
+//		lblCurrentFiles.setLayoutData(new RowData(241, SWT.DEFAULT));
+//		lblCurrentFiles.setText("Current Files");
+//		
+//		
+//		Label lblcuSource = new Label(compositeFiles, SWT.CENTER);
+//		lblcuSource.setText("kernel source");
+//		
+//		Composite composite = new Composite(compositeFiles, SWT.NONE);
+//		composite.setLayout(new GridLayout(2, false));
+//		
+//		txtcu = new Text(composite, SWT.BORDER);
+//		txtcu.setToolTipText("                  ");
+//		GridData gd_txtcu = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+//		gd_txtcu.widthHint = 166;
+//		txtcu.setLayoutData(gd_txtcu);
+//		txtcu.setText("*.cu");
+//		
+//		Button btnBrowse = new Button(composite, SWT.NONE);
+//		btnBrowse.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+//		btnBrowse.setText("Browse");
+//		
+//		Label lblptxSource = new Label(compositeFiles, SWT.CENTER);
+//		lblptxSource.setText("ptx source");
+//		
+//		Composite composite_1 = new Composite(compositeFiles, SWT.NONE);
+//		composite_1.setLayout(new GridLayout(2, false));
+//		
+//		txtptx = new Text(composite_1, SWT.BORDER);
+//		txtptx.setText("*.ptx");
+//		GridData gd_txtptx = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+//		gd_txtptx.widthHint = 166;
+//		txtptx.setLayoutData(gd_txtptx);
+//		
+//		Button button = new Button(composite_1, SWT.NONE);
+//		button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+//		button.setText("Browse");
+//		
+//		Label lbltxtCompilerMessages = new Label(compositeFiles, SWT.CENTER);
+//		lbltxtCompilerMessages.setText("compiler messages");
+//		
+//		Composite composite_3 = new Composite(compositeFiles, SWT.NONE);
+//		composite_3.setLayout(new GridLayout(2, false));
+//		
+//		text = new Text(composite_3, SWT.BORDER);
+//		text.setText("*.txt");
+//		GridData gd_text = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+//		gd_text.widthHint = 166;
+//		text.setLayoutData(gd_text);
+//		
+//		Button button_2 = new Button(composite_3, SWT.NONE);
+//		button_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+//		button_2.setText("Browse");
+//		
+//		Canvas canvasNext = new CanvasGPU(compositeHistory, SWT.NONE);
+//		canvasNext.setLayoutData(new RowData(244, 183));
+//		
+//		Button btnNext = new Button(canvasNext, SWT.NONE);
+//		btnNext.setBounds(10, 10, 81, 26);
+//		btnNext.setText("Next");
 		
 		sourceCode = new Text(shlVisualProfiler, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		//gd_sourceCode.widthHint = 366;
