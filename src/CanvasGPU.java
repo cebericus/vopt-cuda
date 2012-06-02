@@ -54,13 +54,13 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 		
 		try {
 			
-			ImageData image_data_global = new ImageData( "drawing.png" );
+			ImageData image_data_global = new ImageData( "Calculator.png" );
 
 			Image image_global = new Image(  this.getDisplay(), image_data_global );
 
 			GC gc = new GC( this );
 
-			gc.drawImage( image_global, 100, 10);
+			gc.drawImage( image_global, 10, 10);
 
 			image_global.dispose();
 

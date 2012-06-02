@@ -275,11 +275,14 @@ public class ProfileMap {
 	
 	
 	/**
-	 * in progress
+	 * takes in a (valid) list of profiler option names and filters them by the 
+	 * requested method. so, for instance, any method starting with "memcpy"
+	 * only needs the options of cputime, gputime, and memory related options.
+	 * 
 	 * 
 	 * @param method
 	 * @param options
-	 * @return filtered list of methods
+	 * @return filtered list of options
 	 */
 	public List<String> filterByMethod( String method, List<String> options ){
 		
