@@ -434,6 +434,33 @@ public class ProfileMap {
 		return ( sum / (double) n );
 	}
 	
+	/**
+	 * queries all elements of profile map, across all methods and calculates
+	 * a sum (over all conditions)
+	 * TODO should be deprecated, replaced by separate statistics class(es)
+	 * 
+	 * @param option
+	 * @return sum over all conditions
+	 */
+	public double sum( String option ){
+		
+		double sum = 0;
+		
+		try {
+			
+			/** compose a list of all values for the requested option */
+			for (Map.Entry<Integer, String> entry : 
+										this.profileMap.get(option).entrySet()) {
+
+				sum = sum + Double.valueOf( entry.getValue() );
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return sum;
+	}
 	
 	/**
 	 * queries all elements of profile map for method and calculates an average
@@ -478,6 +505,43 @@ public class ProfileMap {
 		return ( sum / (double) n );
 	}
 
+	/**
+	 * queries all elements of profile map for method and calculates a sum
+	 * for the option associated with that method
+	 * TODO should be deprecated, replaced by separate statistics class(es)
+	 * 
+	 * Throws a NaN exception if called with a Kernel function as the 
+	 * method argument and an unavailable option is requested, ie the option 
+	 * memtransfer....
+	 * Alternatively, same exception if method is a memcpy function and a
+	 * kernel specific option ie. gridsizeX is asked for.
+	 * 
+	 * @param method
+	 * @param option
+	 * @return sum over single condition
+	 */
+	public double sum( String method, String option ){
+
+		double sum = 0;
+
+		try {
+
+			/** compose a list of values for the requested option by method */
+			for( Map.Entry<Integer, String> entry : 
+									this.profileMap.get( "method" ).entrySet() ) {
+				
+				if( entry.getValue().matches( method ) ){
+
+					sum = sum + Double.valueOf( this.profileMap.get( option ).get( entry.getKey() ) );
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return sum;
+	}
 	
 	/**
 	 * Takes the name of a valid profiling option as an argument and gives back
@@ -682,6 +746,13 @@ public class ProfileMap {
 		/** test extraction of paired data points by option, specific methods */
 		lhm = p.getLinkedMap( "memcpyDtoD",  "gputime");
 		System.out.println( "lhm : " + lhm );
+		
+		/** partial test of sum functions - note still a problem with identfying
+		 * the kernel name
+		 */
+		System.out.println( "Sum cputime over all observations: " + p.sum("cputime") );
+		System.out.println( "Sum occupancy over all observations: " + p.sum("occupancy") );
+		System.out.println( "Sum gputime over memcpyDtoH observations: " + p.sum( "memcpyDtoH", "gputime") );
 		
 		while (!sh.isDisposed()) {
 			if (!display.readAndDispatch()) {
