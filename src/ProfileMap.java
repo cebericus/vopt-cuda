@@ -476,7 +476,7 @@ public class ProfileMap {
 	 * a sorted list of paired line numbers and values
 	 * 
 	 * @param option
-	 * @return pairs of data points
+	 * @return pairs of data points: ( line_number, data_double )
 	 */
 	public LinkedHashMap<Integer, Double> getLinkedMap( String option ){
 		
