@@ -126,7 +126,7 @@ public class BaseWindow {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			devs_title = "DeviceQuery Exception - CUDA Devices not found or unknown.";
+			devs_title = " - DeviceQuery Exception - CUDA Devices not found.";
 		}
 		
 		

@@ -35,14 +35,15 @@ public class DeviceQuery{
     public DeviceQuery()
     {
         JCudaDriver.setExceptionsEnabled(true);
+        
         cuInit(0);
 
         // the number of devices
-    	int deviceCountArray[] = { 0 };
+    	int deviceCountList[] = { 0 };
 
-        cuDeviceGetCount( deviceCountArray );
+        cuDeviceGetCount( deviceCountList );
         
-        this.deviceCount = deviceCountArray[0];
+        this.deviceCount = deviceCountList[0];
         
         // create array of device attribute objects
         this.cudaDevices = new DeviceAttributes[this.deviceCount];

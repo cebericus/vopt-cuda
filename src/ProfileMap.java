@@ -484,12 +484,8 @@ public class ProfileMap {
 	 * a sorted list of paired line numbers and values
 	 * 
 	 * @param option
-<<<<<<< HEAD
-	 * @return pairs of data points: ( line_number, data_double )
-=======
 	 * @return pairs of data points, rejects "method" and returns empty data
 	 * structure, invalid option string will give a null pointer exception.
->>>>>>> de47865b88d7077eb50b86840cf48b3eb2317a4e
 	 */
 	public LinkedHashMap<Integer, Double> getLinkedMap( String option ){
 		
