@@ -99,7 +99,7 @@ public class BaseWindow {
 	 */
 	private void exit() {
 		//this.profileTable.dispose();
-		this.ptxCode.dispose();
+		//this.ptxCode.dispose();
 	    this.shlVisualProfiler.dispose();
 	    System.exit(0);
 	}

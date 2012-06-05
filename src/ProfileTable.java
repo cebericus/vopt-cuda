@@ -26,7 +26,7 @@ public class ProfileTable {
 		
 		//super(parent, style);
 		
-		this.table = new Table( parent, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
+		this.table = new Table( parent, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION  );
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		
@@ -42,32 +42,57 @@ public class ProfileTable {
 		TableColumn first_column = new TableColumn(table, SWT.NONE);
 		first_column.setText ( "Line No." );
 
-		for( Iterator<String> options = profileMap.options().iterator() ; options.hasNext(); ){
-			TableColumn column = new TableColumn(table, SWT.NONE);
-			column.setText ( options.next() );
-			
-		}	
-		
 		/** make rows */
 		for( int i = 0; i < profileMap.n_overall(); ++i ){
 			TableItem item = new TableItem (table, SWT.NONE);
 			item.setText( 0, Integer.toString(i) );
 		}
 		
-
-		for( Map.Entry<String, HashMap<Integer, String> > entry : profileMap.get().entrySet() ){
+		/** column index for option keywords */
+		int c = 1;
+		
+		for( Iterator<String> options = profileMap.options().iterator() ; options.hasNext(); ){
 			
-			System.out.println( "map: " + entry.getKey() );
+			String next = options.next();
 			
-			for( Map.Entry<Integer, String> data : entry.getValue().entrySet() ){
+			/** column heading */
+			TableColumn column = new TableColumn(table, SWT.NONE);
+			column.setText ( next );
+	
+			/** access data for the current option keyword and populate column */
+			for( Map.Entry<Integer, String> col : profileMap.get().get( next ).entrySet() ){
 				
-				//System.out.println( "data: " + data.getKey() + " " + data.getValue() );
-
-				//item.setText( data.getKey(), data.getValue() );
+				System.out.println( c + " " + next + " " + col + " " + col.getKey() + " " + col.getValue() );
 				
+				/** the line matching the key for the current data point */
+				TableItem line = table.getItem( col.getKey() );
+				
+				/** TODO see if linked HashMap or other structure would be faster/easier */
+				/** set the cell */
+				line.setText( c, col.getValue() );
+					
 			}
+			
+			/** move over one column */
+			++c;
+		}	
+		
 
-		}
+//		
+//
+//		for( Map.Entry<String, HashMap<Integer, String> > entry : profileMap.get().entrySet() ){
+//			
+//			System.out.println( "map: " + entry.getKey() );
+//			
+//			for( Map.Entry<Integer, String> data : entry.getValue().entrySet() ){
+//				
+//				//System.out.println( "data: " + data.getKey() + " " + data.getValue() );
+//
+//				this.table.s     item.setText( data.getKey(), data.getValue() );
+//				
+//			}
+//
+//		}
 			
 
 
