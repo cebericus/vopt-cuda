@@ -51,6 +51,7 @@ public class ProfileTable {
 		/** column index for option keywords */
 		int c = 1;
 		
+		/** get options and use as columns in table */
 		for( Iterator<String> options = profileMap.options().iterator() ; options.hasNext(); ){
 			
 			String next = options.next();
@@ -62,7 +63,7 @@ public class ProfileTable {
 			/** access data for the current option keyword and populate column */
 			for( Map.Entry<Integer, String> col : profileMap.get().get( next ).entrySet() ){
 				
-				System.out.println( c + " " + next + " " + col + " " + col.getKey() + " " + col.getValue() );
+				//System.out.println( c + " " + next + " " + col + " " + col.getKey() + " " + col.getValue() );
 				
 				/** the line matching the key for the current data point */
 				TableItem line = table.getItem( col.getKey() );
