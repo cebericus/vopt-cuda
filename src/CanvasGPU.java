@@ -1,4 +1,9 @@
 
+
+import static jcuda.driver.CUdevice_attribute.*;
+
+
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -6,24 +11,72 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
 /**
  * Drawable canvas for visual profiler tool
- * Team 4b: Michael Barger, Alex Kelly, Cole Nelson
  * @author nelsoncs 2012-May-14 
  */
 public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListener {
 
-	CanvasGPU(Composite shlVisualProfiler, int style) {
+	CanvasGPU( Composite shlVisualProfiler, DeviceQuery devices, int style ) {
 		
 		super( shlVisualProfiler, style | SWT.BORDER );
+		
+		/** font for labels and widgets */
+		Font font = new Font( shlVisualProfiler.getDisplay(), "Arial",18,SWT.BOLD ); 
+		
+		/** set the widgets on the canvas */
+		Label labelComputeCapability = new Label( this, SWT.NULL );
+		
+		/** default to first device */
+		/** TODO enable switching devices for occupancy calculator */
+		labelComputeCapability.setFont(font);
+		labelComputeCapability.setText( devices.get()[0].getMajor() + "."
+											+ devices.get()[0].getMajor() );
+		labelComputeCapability.setBounds( 970,  15, 40, 20 );
+		
+		Label labelSharedMemAlloc = new Label( this, SWT.NULL );
+		labelSharedMemAlloc.setFont(font);
+		labelSharedMemAlloc.setText( Integer.toString( 
+				devices.get()[0].sharedMemAllocUnitSize() ) + " bytes");
+		labelSharedMemAlloc.setBounds( 910, 100, 100, 20 );
+		
+		Combo comboMaxShared = new Combo( this, SWT.NULL );
+		comboMaxShared.setFont(font);
+		comboMaxShared.add( Integer.toString( 
+				devices.get()[0].getAttributes().get(CU_DEVICE_ATTRIBUTE_MAX_SHARED_MEMORY_PER_BLOCK) ) );
+		comboMaxShared.add( "16384" );
+		comboMaxShared.select(0);
+		comboMaxShared.setBounds( 900, 132, 100, 20 );
+		
+		Label labelMaxThdPerBlk = new Label( this, SWT.NULL );
+		labelMaxThdPerBlk.setFont(font);
+		labelMaxThdPerBlk.setText( Integer.toString( 
+				devices.get()[0].getAttributes().get(CU_DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK) ) );
+		labelMaxThdPerBlk.setBounds( 925, 615, 100, 20 );
+		
+		Label labelThdPerWarp = new Label( this, SWT.NULL );
+		labelThdPerWarp.setFont(font);
+		labelThdPerWarp.setText( Integer.toString( 
+				devices.get()[0].getAttributes().get( CU_DEVICE_ATTRIBUTE_WARP_SIZE ) ) );
+		labelThdPerWarp.setBounds( 925, 653, 100, 20 );
+		
+		Label labelMaxThdPerSM = new Label( this, SWT.NULL );
+		labelMaxThdPerSM.setFont(font);
+		labelMaxThdPerSM.setText( Integer.toString( 
+				devices.get()[0].getAttributes().get(CU_DEVICE_ATTRIBUTE_MAX_THREADS_PER_MULTIPROCESSOR) ) );
+		labelMaxThdPerSM.setBounds( 925, 690, 100, 20 );
+		
 		
 		/** Canvas SWT Listeners */
 		
@@ -54,15 +107,21 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 		
 		try {
 			
-			ImageData image_data_global = new ImageData( "Calculator.png" );
+			ImageData image_data = new ImageData( "Calculator.png" );
+			
+			
 
-			Image image_global = new Image(  this.getDisplay(), image_data_global );
+			Image image = new Image(  this.getDisplay(), image_data );
+			
+			
 
 			GC gc = new GC( this );
+			
+			//gc.setAlpha(64);
 
-			gc.drawImage( image_global, 10, 10);
+			gc.drawImage( image, 5, 5);
 
-			image_global.dispose();
+			image.dispose();
 
 //			ImageData image_data_grid = new ImageData( "Grid.png" );
 //

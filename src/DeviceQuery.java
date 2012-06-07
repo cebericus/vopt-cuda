@@ -1,5 +1,4 @@
 /*
- * Team 4b: Michael Barger, Alex Kelly, Cole Nelson
  * @author nelsoncs 2012-May-18 
  * 
  * This class was modeled on the deviceQuery example from the JCUDA.org website.

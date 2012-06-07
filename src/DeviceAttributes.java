@@ -7,7 +7,6 @@ import jcuda.driver.*;
 import java.util.*;
 
 /**
- * Team 4b: Michael Barger, Alex Kelly, Cole Nelson
  * @author nelsoncs 2012-May-18 
  * 
  * 
@@ -60,7 +59,7 @@ public class DeviceAttributes {
         this.attributes = new HashMap<Integer, Integer>();
         
         /** ugly but it works, also note these constants are described
-         * in the nvidia cuda library under device management 
+         * in the nvidia cuda library under device management-> 
          * cuDeviceGetAttribute() */
         attributes.put(CU_DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK, 0);
         attributes.put(CU_DEVICE_ATTRIBUTE_MAX_BLOCK_DIM_X, 0);
@@ -148,6 +147,31 @@ public class DeviceAttributes {
 		return coresPerMP;
 	}
 	
+	/** could not identify this as an attribute returned by device query, so using
+	 * values from occ. calc. worksheet
+	 * @return size in bytes
+	 */
+	public Integer sharedMemAllocUnitSize(){
+
+		Integer sz = 0;
+
+		switch ( this.getMajor() ) {
+
+		case 1:
+			sz = 512;
+			break;
+
+		case 2:
+			sz = 128;
+			break;
+
+		default:
+			break;
+		}
+
+		return sz;
+	}
+
 	
     /**
      * Creates a String from a zero-terminated string in a byte array
@@ -155,19 +179,16 @@ public class DeviceAttributes {
      * @param buf byte[]
      * @return String
      */
-    private static String bytesToString( byte buf[] )
-    {
+    private static String bytesToString( byte buf[] ){
         StringBuilder str = new StringBuilder();
+        
         char ch;
         
-        for (int i = 0; i < buf.length; i++)
+        for( int i = 0; i < buf.length && buf[i] != 0; ++i )
         {
             ch = (char) buf[i];
             
-            if (ch != 0)
-            	str.append( ch );
-            else
-                break;     
+            str.append( ch );   
         }
         
         return str.toString();
