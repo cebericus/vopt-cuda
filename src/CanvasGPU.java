@@ -27,6 +27,8 @@ import org.eclipse.swt.widgets.Listener;
  * @author nelsoncs 2012-May-14 
  */
 public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListener {
+	
+	static final int FONT_DISPLAY_HEIGHT = 25; 
 
 	CanvasGPU( Composite shlVisualProfiler, DeviceQuery devices, int style ) {
 		
@@ -36,20 +38,20 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 		Font font = new Font( shlVisualProfiler.getDisplay(), "Arial",18,SWT.BOLD ); 
 		
 		/** set the widgets on the canvas */
-		Label labelComputeCapability = new Label( this, SWT.NULL );
 		
 		/** default to first device */
 		/** TODO enable switching devices for occupancy calculator */
+		Label labelComputeCapability = new Label( this, SWT.NULL );
 		labelComputeCapability.setFont(font);
 		labelComputeCapability.setText( devices.get()[0].getMajor() + "."
 											+ devices.get()[0].getMajor() );
-		labelComputeCapability.setBounds( 970,  15, 40, 20 );
+		labelComputeCapability.setBounds( 970,  15, 40, FONT_DISPLAY_HEIGHT );
 		
 		Label labelSharedMemAlloc = new Label( this, SWT.NULL );
 		labelSharedMemAlloc.setFont(font);
 		labelSharedMemAlloc.setText( Integer.toString( 
-				devices.get()[0].sharedMemAllocUnitSize() ) + " bytes");
-		labelSharedMemAlloc.setBounds( 910, 100, 100, 20 );
+				devices.get()[0].sharedMemAllocUnitSize() ) + " byte");
+		labelSharedMemAlloc.setBounds( 900, 100, 100, FONT_DISPLAY_HEIGHT );
 		
 		Combo comboMaxShared = new Combo( this, SWT.NULL );
 		comboMaxShared.setFont(font);
@@ -57,25 +59,25 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 				devices.get()[0].getAttributes().get(CU_DEVICE_ATTRIBUTE_MAX_SHARED_MEMORY_PER_BLOCK) ) );
 		comboMaxShared.add( "16384" );
 		comboMaxShared.select(0);
-		comboMaxShared.setBounds( 900, 132, 100, 20 );
+		comboMaxShared.setBounds( 900, 132, 100, FONT_DISPLAY_HEIGHT );
 		
 		Label labelMaxThdPerBlk = new Label( this, SWT.NULL );
 		labelMaxThdPerBlk.setFont(font);
 		labelMaxThdPerBlk.setText( Integer.toString( 
 				devices.get()[0].getAttributes().get(CU_DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK) ) );
-		labelMaxThdPerBlk.setBounds( 925, 615, 100, 20 );
+		labelMaxThdPerBlk.setBounds( 925, 615, 100, FONT_DISPLAY_HEIGHT );
 		
 		Label labelThdPerWarp = new Label( this, SWT.NULL );
 		labelThdPerWarp.setFont(font);
 		labelThdPerWarp.setText( Integer.toString( 
 				devices.get()[0].getAttributes().get( CU_DEVICE_ATTRIBUTE_WARP_SIZE ) ) );
-		labelThdPerWarp.setBounds( 925, 653, 100, 20 );
+		labelThdPerWarp.setBounds( 925, 653, 100, FONT_DISPLAY_HEIGHT );
 		
 		Label labelMaxThdPerSM = new Label( this, SWT.NULL );
 		labelMaxThdPerSM.setFont(font);
 		labelMaxThdPerSM.setText( Integer.toString( 
 				devices.get()[0].getAttributes().get(CU_DEVICE_ATTRIBUTE_MAX_THREADS_PER_MULTIPROCESSOR) ) );
-		labelMaxThdPerSM.setBounds( 925, 690, 100, 20 );
+		labelMaxThdPerSM.setBounds( 925, 690, 100, FONT_DISPLAY_HEIGHT );
 		
 		
 		/** Canvas SWT Listeners */
