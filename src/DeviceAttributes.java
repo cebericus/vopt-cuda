@@ -37,6 +37,7 @@ public class DeviceAttributes {
 	 */
 	public DeviceAttributes( int dev_num ) {
 		
+		/** enumerate available devices */
 		CUdevice device = new CUdevice();
         cuDeviceGet( device, dev_num );
 
@@ -45,7 +46,19 @@ public class DeviceAttributes {
     	
         cuDeviceGetName( deviceName, deviceName.length, device );
         
-        this.name = bytesToString( deviceName );
+        /** device name, convert from array of bytes to java String */
+        StringBuilder str = new StringBuilder();
+        
+        char ch;
+        
+        for( int i = 0; i < deviceName.length && deviceName[i] != 0; ++i )
+        {
+            ch = (char) deviceName[i];
+            
+            str.append( ch );   
+        }
+        
+        this.name = str.toString();
 
         /** compute capability */
         int majorArray[] = { 0 };
@@ -147,6 +160,171 @@ public class DeviceAttributes {
 		return coresPerMP;
 	}
 	
+
+	/** could not identify this as an attribute returned by device query
+	 * using values from C Programming Guide Appendix F
+	 * 
+	 * @return size in bytes
+	 */
+	public Integer maxSMThreadBlocks(){
+
+		Integer max = 0;
+
+		switch ( this.getMajor() ) {
+
+		case 1:
+		case 2:
+			max = 8;
+			break;
+
+		default:
+			break;
+		}
+
+		return max;
+	}
+	
+	
+	/** 
+	 * register allocation unit size in bytes
+	 * 
+	 * using values from C Programming Guide Appendix F
+	 * CC 3.X from wikipedia 
+	 * @return size in bytes
+	 */
+	public Integer maxSMWarps(){
+
+		Integer sz = 0;
+		int minor = this.getMinor();
+
+		switch ( this.getMajor() ) {
+
+		case 1:
+			
+			switch( minor ){
+			
+			case 0:
+			case 1:
+				sz = 24;
+				break;
+				
+			case 2:
+			case 3:
+				sz = 32;
+				break;
+			}
+
+		case 2:
+			sz = 48;
+			break;
+			
+		case 3:
+			sz = 64;
+			break;
+
+		default:
+			break;
+		}
+
+		return sz;
+	}
+	
+	
+	/** could not identify this as an attribute returned by device query, so using
+	 * values from occ. calc. worksheet
+	 * @return size in bytes
+	 */
+	public Integer regMaxPerThread(){
+
+		Integer max = 0;
+
+		switch ( this.getMajor() ) {
+
+		case 1:
+			max = 124;
+			break;
+
+		case 2:
+			max = 63;
+			break;
+
+		default:
+			break;
+		}
+
+		return max;
+	}
+	
+	/** 
+	 * register allocation granularity
+	 * 
+	 * using values from occ. calc. worksheet
+	 * @return size in bytes
+	 */
+	public String regAllocGran(){
+
+		String sz = "Unknown";
+
+		switch ( this.getMajor() ) {
+
+		case 1:
+			sz = "Block";
+			break;
+
+		case 2:
+			sz = "Warp";
+			break;
+
+		default:
+			break;
+		}
+
+		return sz;
+	}
+	
+	/** 
+	 * register allocation unit size in bytes
+	 * 
+	 * using values from C Programming Guide Appendix F
+	 * @return size in bytes
+	 */
+	public Integer regAllocUnitSz(){
+
+		Integer sz = 0;
+		int minor = this.getMinor();
+
+		switch ( this.getMajor() ) {
+
+		case 1:
+			
+			switch( minor ){
+			
+			case 0:
+			case 1:
+				sz = 256;
+				break;
+				
+			case 2:
+			case 3:
+				sz = 512;
+				break;
+			}
+
+		case 2:
+			sz = 64;
+			break;
+			
+		case 3:
+			sz = 0;
+			break;
+
+		default:
+			break;
+		}
+
+		return sz;
+	}
+	
 	/** could not identify this as an attribute returned by device query, so using
 	 * values from occ. calc. worksheet
 	 * @return size in bytes
@@ -171,31 +349,8 @@ public class DeviceAttributes {
 
 		return sz;
 	}
-
 	
-    /**
-     * Creates a String from a zero-terminated string in a byte array
-     * 
-     * @param buf byte[]
-     * @return String
-     */
-    private static String bytesToString( byte buf[] ){
-        StringBuilder str = new StringBuilder();
-        
-        char ch;
-        
-        for( int i = 0; i < buf.length && buf[i] != 0; ++i )
-        {
-            ch = (char) buf[i];
-            
-            str.append( ch );   
-        }
-        
-        return str.toString();
-    }
-    
-
-    
+ 
     /**
 	 * @return the name
 	 */

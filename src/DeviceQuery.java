@@ -20,7 +20,6 @@ import jcuda.driver.*;
  */
 public class DeviceQuery{
 
-
 	private int deviceCount;
 	private DeviceAttributes [] cudaDevices;
 

@@ -2,8 +2,6 @@
 
 import static jcuda.driver.CUdevice_attribute.*;
 
-
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -20,7 +18,9 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 /**
  * Drawable canvas for visual profiler tool
@@ -29,29 +29,40 @@ import org.eclipse.swt.widgets.Listener;
 public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListener {
 	
 	static final int FONT_DISPLAY_HEIGHT = 25; 
+	static final int FONT_SZ = 14;
+	static final String FONT = "Calibri";
+	static final int FONT_STYLE = SWT.BOLD;
+	static final int LABEL_STYLE = SWT.RIGHT;
+	static final int LABEL_WIDTH = 50;
+	static final int LABEL_POSN = 940;
+	static final int TEXT_STYLE = SWT.BORDER | SWT.RIGHT;
 
 	CanvasGPU( Composite shlVisualProfiler, DeviceQuery devices, int style ) {
 		
 		super( shlVisualProfiler, style | SWT.BORDER );
 		
 		/** font for labels and widgets */
-		Font font = new Font( shlVisualProfiler.getDisplay(), "Arial",18,SWT.BOLD ); 
+		Font font = new Font( shlVisualProfiler.getDisplay(), FONT, FONT_SZ, FONT_STYLE ); 
 		
 		/** set the widgets on the canvas */
 		
 		/** default to first device */
 		/** TODO enable switching devices for occupancy calculator */
+		
+		/** Compute capability */
 		Label labelComputeCapability = new Label( this, SWT.NULL );
 		labelComputeCapability.setFont(font);
 		labelComputeCapability.setText( devices.get()[0].getMajor() + "."
 											+ devices.get()[0].getMajor() );
-		labelComputeCapability.setBounds( 970,  15, 40, FONT_DISPLAY_HEIGHT );
+		labelComputeCapability.setBounds( 968,  15, 40, FONT_DISPLAY_HEIGHT );
 		
-		Label labelSharedMemAlloc = new Label( this, SWT.NULL );
+		
+		/** Shared memory */
+		Label labelSharedMemAlloc = new Label( this, LABEL_STYLE );
 		labelSharedMemAlloc.setFont(font);
 		labelSharedMemAlloc.setText( Integer.toString( 
-				devices.get()[0].sharedMemAllocUnitSize() ) + " byte");
-		labelSharedMemAlloc.setBounds( 900, 100, 100, FONT_DISPLAY_HEIGHT );
+				devices.get()[0].sharedMemAllocUnitSize() ) );
+		labelSharedMemAlloc.setBounds( LABEL_POSN, 100, LABEL_WIDTH, FONT_DISPLAY_HEIGHT );
 		
 		Combo comboMaxShared = new Combo( this, SWT.NULL );
 		comboMaxShared.setFont(font);
@@ -61,24 +72,86 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 		comboMaxShared.select(0);
 		comboMaxShared.setBounds( 900, 132, 100, FONT_DISPLAY_HEIGHT );
 		
-		Label labelMaxThdPerBlk = new Label( this, SWT.NULL );
+		
+		/** Registers */
+		Label labelRegMaxPerThread = new Label( this, LABEL_STYLE );
+		labelRegMaxPerThread.setFont(font);
+		labelRegMaxPerThread.setText( Integer.toString( 
+				devices.get()[0].regMaxPerThread() ) );
+		labelRegMaxPerThread.setBounds( LABEL_POSN, 265, LABEL_WIDTH, FONT_DISPLAY_HEIGHT );
+		
+		Label labelRegFileSz = new Label( this, LABEL_STYLE );
+		labelRegFileSz.setFont(font);
+		labelRegFileSz.setText( Integer.toString( 
+				devices.get()[0].getAttributes().get(CU_DEVICE_ATTRIBUTE_MAX_REGISTERS_PER_BLOCK) ) );
+		labelRegFileSz.setBounds( LABEL_POSN, 305, LABEL_WIDTH, FONT_DISPLAY_HEIGHT );
+		
+		Label labelRegAllocUnit = new Label( this, LABEL_STYLE );
+		labelRegAllocUnit.setFont(font);
+		labelRegAllocUnit.setText( Integer.toString( 
+				devices.get()[0].regAllocUnitSz() ) );
+		labelRegAllocUnit.setBounds( LABEL_POSN, 340, LABEL_WIDTH, FONT_DISPLAY_HEIGHT );
+		
+		Label labelRegGranularity = new Label( this, LABEL_STYLE );
+		labelRegGranularity.setFont(font);
+		labelRegGranularity.setText( devices.get()[0].regAllocGran() );
+		labelRegGranularity.setBounds( LABEL_POSN, 380, LABEL_WIDTH, FONT_DISPLAY_HEIGHT );
+		
+		/** SM limits */
+		Label labelmaxSMThreadBlocks = new Label( this, LABEL_STYLE );
+		labelmaxSMThreadBlocks.setFont(font);
+		labelmaxSMThreadBlocks.setText( Integer.toString( 
+				devices.get()[0].maxSMThreadBlocks() ) );
+		labelmaxSMThreadBlocks.setBounds( LABEL_POSN, 470, LABEL_WIDTH, FONT_DISPLAY_HEIGHT );
+		
+		Label labelmaxSMWarps = new Label( this, LABEL_STYLE );
+		labelmaxSMWarps.setFont(font);
+		labelmaxSMWarps.setText( Integer.toString( 
+				devices.get()[0].maxSMWarps() ) );
+		labelmaxSMWarps.setBounds( LABEL_POSN, 515, LABEL_WIDTH, FONT_DISPLAY_HEIGHT );
+		
+		/** Threads */
+		Label labelMaxThdPerBlk = new Label( this, LABEL_STYLE );
 		labelMaxThdPerBlk.setFont(font);
 		labelMaxThdPerBlk.setText( Integer.toString( 
 				devices.get()[0].getAttributes().get(CU_DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK) ) );
-		labelMaxThdPerBlk.setBounds( 925, 615, 100, FONT_DISPLAY_HEIGHT );
+		labelMaxThdPerBlk.setBounds( LABEL_POSN, 615, LABEL_WIDTH, FONT_DISPLAY_HEIGHT );
 		
-		Label labelThdPerWarp = new Label( this, SWT.NULL );
+		Label labelThdPerWarp = new Label( this, LABEL_STYLE );
 		labelThdPerWarp.setFont(font);
 		labelThdPerWarp.setText( Integer.toString( 
 				devices.get()[0].getAttributes().get( CU_DEVICE_ATTRIBUTE_WARP_SIZE ) ) );
-		labelThdPerWarp.setBounds( 925, 653, 100, FONT_DISPLAY_HEIGHT );
+		labelThdPerWarp.setBounds( LABEL_POSN, 653, LABEL_WIDTH, FONT_DISPLAY_HEIGHT );
 		
-		Label labelMaxThdPerSM = new Label( this, SWT.NULL );
+		Label labelMaxThdPerSM = new Label( this, LABEL_STYLE );
 		labelMaxThdPerSM.setFont(font);
 		labelMaxThdPerSM.setText( Integer.toString( 
 				devices.get()[0].getAttributes().get(CU_DEVICE_ATTRIBUTE_MAX_THREADS_PER_MULTIPROCESSOR) ) );
-		labelMaxThdPerSM.setBounds( 925, 690, 100, FONT_DISPLAY_HEIGHT );
+		labelMaxThdPerSM.setBounds( LABEL_POSN, 690, LABEL_WIDTH, FONT_DISPLAY_HEIGHT );
 		
+		/** User side controls and labels */
+		
+		Text textSharedMemPerBlock = new Text( this, TEXT_STYLE );
+		textSharedMemPerBlock.setFont(font);
+		textSharedMemPerBlock.setText( "--ptxas-options=-v" );
+		textSharedMemPerBlock.setBounds( 5, 132, 160, FONT_DISPLAY_HEIGHT );
+		/** Note: these setFocus() calls are used to cover the chinsy arrows */
+		textSharedMemPerBlock.setFocus();
+		
+		Text textRegsPerThread = new Text( this, TEXT_STYLE );
+		textRegsPerThread.setFont(font);
+		textRegsPerThread.setText( "--ptxas-options=-v" );
+		textRegsPerThread.setBounds( 5, 369, 160, FONT_DISPLAY_HEIGHT );
+		textSharedMemPerBlock.setFocus();
+		
+		Combo comboThreadsPerBlock = new Combo( this, TEXT_STYLE );
+		comboThreadsPerBlock.setFont(font);
+		comboThreadsPerBlock.setText( "" );
+		comboThreadsPerBlock.setBounds( 5, 520, 160, FONT_DISPLAY_HEIGHT );
+		comboThreadsPerBlock.setFocus();
+		
+		textSharedMemPerBlock.setFocus();
+		textSharedMemPerBlock.selectAll();
 		
 		/** Canvas SWT Listeners */
 		
@@ -104,17 +177,18 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 	}
 
 
-
+	/** 
+	 * draw png flow chart on the canvas
+	 * 
+	 * @param event
+	 */
 	protected void Draw(Event event) {
 		
 		try {
 			
 			ImageData image_data = new ImageData( "Calculator.png" );
-			
-			
 
 			Image image = new Image(  this.getDisplay(), image_data );
-			
 			
 
 			GC gc = new GC( this );
@@ -124,23 +198,6 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 			gc.drawImage( image, 5, 5);
 
 			image.dispose();
-
-//			ImageData image_data_grid = new ImageData( "Grid.png" );
-//
-//			Image image_grid = new Image(  this.getDisplay(), image_data_grid );
-//
-//			gc.drawImage( image_grid, 10, 220);
-//
-//			image_grid.dispose();
-//
-//			ImageData image_data_block = new ImageData( "Block.png" );
-//
-//			Image image_block = new Image(  this.getDisplay(), image_data_block );
-//
-//			gc.drawImage( image_block, 350, 220);
-//
-//			image_block.dispose();
-
 			gc.dispose();
 			
 		} catch (Exception e) {

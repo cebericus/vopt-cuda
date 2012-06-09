@@ -23,9 +23,7 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.custom.StackLayout;
+
 
 
 /**
@@ -39,22 +37,26 @@ import org.eclipse.swt.custom.StackLayout;
  */
 public class BaseWindow {
 	
-	private DeviceQuery devices;
+	/** main window shell */
+	protected Shell shell;
 
-	protected Shell shlVisualProfiler;
-	
-	protected ProfileMap profile_map;
-	
+	/** left hand panel and bottom panel first tab */
+	private ProfileMap profile_map;
 	private ProfileTable profileTable;
+	private Text txtProfileData;
 	
-
-	
+	/** widgets for left ahnd panel */
 	private Combo comboMethods;
 	private Combo comboOptions;
-	private MetricShapeBase m;
+
+	/** device query for title bar and canvasGPU data */
+	private DeviceQuery devices;
+	
+	/** center canvas for occupancy calculator integration */
 	private Canvas canvasOccupancy;
 
-	private Text txtProfileData;
+	/** movable shape for center canvas */
+	private MetricShapeBase m;
 
 
 	/**
@@ -85,9 +87,9 @@ public class BaseWindow {
 	public void open() {
 		Display display = Display.getDefault();
 		createContents();
-		shlVisualProfiler.open();
-		shlVisualProfiler.layout();
-		while (!shlVisualProfiler.isDisposed()) {
+		shell.open();
+		shell.layout();
+		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
@@ -101,7 +103,7 @@ public class BaseWindow {
 	private void exit() {
 		//this.profileTable.dispose();
 		//this.ptxCode.dispose();
-	    this.shlVisualProfiler.dispose();
+	    this.shell.dispose();
 	    System.exit(0);
 	}
 
@@ -112,9 +114,9 @@ public class BaseWindow {
 		
 		/** BEGIN Main Shell */
 		
-		shlVisualProfiler = new Shell();
-		shlVisualProfiler.setSize(1350, 900);
-		shlVisualProfiler.setForeground(SWTResourceManager.getColor(76, 76, 76));
+		shell = new Shell();
+		shell.setSize(1350, 900);
+		shell.setForeground(SWTResourceManager.getColor(76, 76, 76));
 		
 		String devs_title = new String();
 		
@@ -124,7 +126,7 @@ public class BaseWindow {
 			
 			for( int i = 0; i < devices.getDeviceCount(); ++i ){
 				
-				devs_title = devs_title + " - Devices found: " + "(" + i + ") " + devices.get()[i].getName();
+				devs_title = devs_title + " -  Devices found: " + "(" + i + ") " + devices.get()[i].getName();
 			}
 			
 		} catch (Exception e) {
@@ -133,9 +135,9 @@ public class BaseWindow {
 		}
 		
 		
-		shlVisualProfiler.setText("VOT - Visual Occupancy Tool" + devs_title );
+		shell.setText("VOPT " + devs_title );
 		GridLayout gl_shlVisualProfiler = new GridLayout(2, false);
-		shlVisualProfiler.setLayout(gl_shlVisualProfiler);
+		shell.setLayout(gl_shlVisualProfiler);
 		
 		/** END Main Shell */
 		
@@ -143,8 +145,8 @@ public class BaseWindow {
 		
 		/** BEGIN Menu */
 		
-		Menu menuMain = new Menu(shlVisualProfiler, SWT.BAR);
-		shlVisualProfiler.setMenuBar(menuMain);
+		Menu menuMain = new Menu(shell, SWT.BAR);
+		shell.setMenuBar(menuMain);
 
 		MenuItem mntmExit = new MenuItem(menuMain, SWT.NONE);
 		mntmExit.addSelectionListener(new SelectionAdapter() {
@@ -190,7 +192,7 @@ public class BaseWindow {
 		/** BEGIN Profile Data panel */
 		
 		/** Composite set-up for the panel */
-		Composite compositeProgressBars = new Composite(shlVisualProfiler, SWT.V_SCROLL);
+		Composite compositeProgressBars = new Composite(shell, SWT.V_SCROLL);
 		compositeProgressBars.setLayout(new GridLayout(1, false));
 		GridData gd_compositeProgressBars = new GridData(SWT.LEFT, SWT.FILL, true, false, 1, 1);
 		gd_compositeProgressBars.heightHint = 600;
@@ -199,6 +201,7 @@ public class BaseWindow {
 		
 		/** Title and profile log file dialog */
 		Composite compositeProfileData = new Composite(compositeProgressBars, SWT.BORDER);
+		
 		GridData gd_compositeProfileData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_compositeProfileData.widthHint = 265;
 		compositeProfileData.setLayoutData(gd_compositeProfileData);
@@ -206,19 +209,23 @@ public class BaseWindow {
 		GridLayout gl_compositeProfileData = new GridLayout(3, false);
 		gl_compositeProfileData.horizontalSpacing = 1;
 		compositeProfileData.setLayout(gl_compositeProfileData);
+		
 		Label lblProfileData = new Label(compositeProfileData, SWT.CENTER);
 		GridData gd_lblProfileData = new GridData(SWT.CENTER, SWT.CENTER, false, false, 3, 1);
 		gd_lblProfileData.widthHint = 250;
+		
 		lblProfileData.setLayoutData(gd_lblProfileData);
 		lblProfileData.setFont(SWTResourceManager.getFont("Ubuntu", 11, SWT.BOLD));
 		lblProfileData.setAlignment(SWT.CENTER);
 		lblProfileData.setText("Profile Data");
+		
 		txtProfileData = new Text(compositeProfileData, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.CANCEL);
 		txtProfileData.setToolTipText("Command line profile data file.  Default name is cuda_profile_0.log.");
 		txtProfileData.setText("*.log");
 		GridData gd_txtProfileData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
 		gd_txtProfileData.widthHint = 186;
 		txtProfileData.setLayoutData(gd_txtProfileData);
+		
 		Button buttonProfileLog = new Button(compositeProfileData, SWT.NONE);
 		buttonProfileLog.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		buttonProfileLog.setText("Load");
@@ -245,13 +252,11 @@ public class BaseWindow {
 		gd_compositeOptionsCombo.heightHint = 58;
 		compositeOptionsCombo.setLayoutData(gd_compositeOptionsCombo);
 		
-		
 		Label lblOptions = new Label(compositeOptionsCombo, SWT.CENTER);
 		lblOptions.setLocation(0, 7);
 		lblOptions.setAlignment(SWT.CENTER);
 		lblOptions.setSize(250, 20);
 		lblOptions.setText("Options");
-
 		
 		this.comboOptions = new Combo(compositeOptionsCombo, SWT.NONE);
 		comboOptions.setLocation(0, 27);
@@ -261,7 +266,6 @@ public class BaseWindow {
 		
 		canvasOccupancy = new Canvas(compositeOccupancy, SWT.NONE);
 		canvasOccupancy.setBounds(0, 0, 262, 50);
-
 		
 		
 		/** Title and profile log file dialog */
@@ -269,7 +273,7 @@ public class BaseWindow {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FileHandler fh = new FileHandler( BaseWindow.this.shlVisualProfiler );
+				FileHandler fh = new FileHandler( BaseWindow.this.shell );
 				
 				/** Brings up file dialog */
 				String tmp_str = fh.onLoadMap( profile_map );
@@ -321,12 +325,10 @@ public class BaseWindow {
 
 			}
 		});
-
 		/** END Profile Data Panel */
 
 		/** BEGIN Canvas Drawing Area */
-
-		Canvas canvasGPU = new CanvasGPU(shlVisualProfiler, devices, SWT.BORDER );
+		Canvas canvasGPU = new CanvasGPU( shell, devices, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		canvasGPU.setLayout(null);
 		GridData gd_canvasGPU = new GridData(SWT.LEFT, SWT.FILL, true, true, 1, 1);
 		gd_canvasGPU.widthHint = 1010;
@@ -337,21 +339,26 @@ public class BaseWindow {
 		canvasGPU.setLayoutData(gd_canvasGPU);
 		canvasGPU.setVisible(true);
 		canvasGPU.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-
-		profileTable = new ProfileTable(shlVisualProfiler, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		/** END Canvas Drawing Area */
+		
+		/** BEGIN lower panel */
+		
+		/** BEGIN first tab of lower panel - profile data table */
+		profileTable = new ProfileTable(shell, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 
 		GridData gd_profileTable = new GridData(SWT.LEFT, SWT.FILL, true, true, 2, 1);
 		gd_profileTable.heightHint = 200;
 		gd_profileTable.widthHint = 1250;
 		//profileTable.setLayoutData(gd_profileTable);
-		new Label(shlVisualProfiler, SWT.NONE);
-		new Label(shlVisualProfiler, SWT.NONE);
+		new Label(shell, SWT.NONE);
+		new Label(shell, SWT.NONE);
+		/** END first tab of lower panel - profile data table */
+
+		/** END lower panel */
 
 
 
-
-
-//		textSearchCode = new Text(shlVisualProfiler, SWT.BORDER | SWT.H_SCROLL | SWT.SEARCH | SWT.CANCEL);
+//		textSearchCode = new Text(shell, SWT.BORDER | SWT.H_SCROLL | SWT.SEARCH | SWT.CANCEL);
 //		GridData gd_textSearchCode = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 //		gd_textSearchCode.widthHint = 332;
 //		textSearchCode.setLayoutData(gd_textSearchCode);
