@@ -131,18 +131,18 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 		
 		/** User side controls and labels */
 		
-		Text textSharedMemPerBlock = new Text( this, TEXT_STYLE );
-		textSharedMemPerBlock.setFont(font);
-		textSharedMemPerBlock.setText( "--ptxas-options=-v" );
-		textSharedMemPerBlock.setBounds( 5, 132, 160, FONT_DISPLAY_HEIGHT );
+		Combo comboSharedMemPerBlock = new Combo( this, TEXT_STYLE );
+		comboSharedMemPerBlock.setFont(font);
+		comboSharedMemPerBlock.setText( "" );
+		comboSharedMemPerBlock.setBounds( 5, 132, 160, FONT_DISPLAY_HEIGHT );
 		/** Note: these setFocus() calls are used to cover the chinsy arrows */
-		textSharedMemPerBlock.setFocus();
+		comboSharedMemPerBlock.setFocus();
 		
-		Text textRegsPerThread = new Text( this, TEXT_STYLE );
-		textRegsPerThread.setFont(font);
-		textRegsPerThread.setText( "--ptxas-options=-v" );
-		textRegsPerThread.setBounds( 5, 369, 160, FONT_DISPLAY_HEIGHT );
-		textSharedMemPerBlock.setFocus();
+		Combo comboRegsPerThread = new Combo( this, TEXT_STYLE );
+		comboRegsPerThread.setFont(font);
+		comboRegsPerThread.setText( "" );
+		comboRegsPerThread.setBounds( 5, 369, 160, FONT_DISPLAY_HEIGHT );
+		comboRegsPerThread.setFocus();
 		
 		Combo comboThreadsPerBlock = new Combo( this, TEXT_STYLE );
 		comboThreadsPerBlock.setFont(font);
@@ -150,8 +150,18 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 		comboThreadsPerBlock.setBounds( 5, 520, 160, FONT_DISPLAY_HEIGHT );
 		comboThreadsPerBlock.setFocus();
 		
-		textSharedMemPerBlock.setFocus();
-		textSharedMemPerBlock.selectAll();
+		Text textThreadsPerBlockX = new Text( this, TEXT_STYLE );
+		textThreadsPerBlockX.setFont(font);
+		textThreadsPerBlockX.setBounds( 5, 560, 40, FONT_DISPLAY_HEIGHT );
+		Text textThreadsPerBlockY = new Text( this, TEXT_STYLE );
+		textThreadsPerBlockY.setFont(font);
+		textThreadsPerBlockY.setBounds( 55, 560, 40, FONT_DISPLAY_HEIGHT );
+		Text textThreadsPerBlockZ = new Text( this, TEXT_STYLE );
+		textThreadsPerBlockZ.setFont(font);
+		textThreadsPerBlockZ.setBounds( 105, 560, 40, FONT_DISPLAY_HEIGHT );
+		
+		comboSharedMemPerBlock.setFocus();
+		comboSharedMemPerBlock.select(0);
 		
 		/** Canvas SWT Listeners */
 		
@@ -182,7 +192,7 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 	 * 
 	 * @param event
 	 */
-	protected void Draw(Event event) {
+	private void Draw(Event event) {
 		
 		try {
 			
@@ -205,14 +215,25 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 		}
 		
 	}
-
+	
+	/**
+	 * 
+	 * 
+	 * @param str_x
+	 * @param str_y
+	 * @param str_z
+	 */
+	public void setThreadPerBlockXYZ( String str_x, String str_y, String str_z ){
+		
+		
+		
+	}
 
 
 	protected void keyPressed(KeyEvent ke) {
 		// TODO Auto-generated method stub
 		
 	}
-
 
 
 	@Override

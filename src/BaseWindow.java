@@ -275,7 +275,7 @@ public class BaseWindow {
 			public void widgetSelected(SelectionEvent e) {
 				FileHandler fh = new FileHandler( BaseWindow.this.shell );
 				
-				/** Brings up file dialog */
+				/** file dialog */
 				String tmp_str = fh.onLoadMap( profile_map );
 				
 				/** set UI file name displayed */
