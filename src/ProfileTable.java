@@ -77,24 +77,6 @@ public class ProfileTable {
 			/** move over one column */
 			++c;
 		}	
-		
-
-//		
-//
-//		for( Map.Entry<String, HashMap<Integer, String> > entry : profileMap.get().entrySet() ){
-//			
-//			System.out.println( "map: " + entry.getKey() );
-//			
-//			for( Map.Entry<Integer, String> data : entry.getValue().entrySet() ){
-//				
-//				//System.out.println( "data: " + data.getKey() + " " + data.getValue() );
-//
-//				this.table.s     item.setText( data.getKey(), data.getValue() );
-//				
-//			}
-//
-//		}
-			
 
 
 		for (int i=0; i<table.getColumnCount(); i++) {

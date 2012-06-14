@@ -1,4 +1,4 @@
-
+/** Copyright 2012 Cole Nelson  */
 
 import static jcuda.driver.CUdevice_attribute.*;
 

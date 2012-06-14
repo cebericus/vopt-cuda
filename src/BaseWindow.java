@@ -1,5 +1,9 @@
+/** Copyright 2012 Cole Nelson  */
+
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.management.BadAttributeValueExpException;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -13,6 +17,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
@@ -32,8 +37,8 @@ import org.eclipse.swt.widgets.Combo;
  * Abstract:
  * 
  * 
- * 
- * @author nelsoncs 2012-May-14.   
+ * @author nelsoncs 2012-May-14.
+ *  
  */
 public class BaseWindow {
 	
@@ -227,6 +232,13 @@ public class BaseWindow {
 		txtProfileData.setLayoutData(gd_txtProfileData);
 		
 		Button buttonProfileLog = new Button(compositeProfileData, SWT.NONE);
+		
+		/** TODO need an application wide color palette with Color management */
+		Color c = new Color( this.shell.getDisplay(), 212, 220, 186 );
+		buttonProfileLog.setBackground(c);
+		//buttonProfileLog.setForeground(c);
+		c.dispose();
+		
 		buttonProfileLog.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		buttonProfileLog.setText("Load");
 		
@@ -262,10 +274,15 @@ public class BaseWindow {
 		comboOptions.setLocation(0, 27);
 		comboOptions.setSize(260, 27);
 		
+		/** composite to hold label and bar graph for "occupancy" */
+		/** TODO move this construct to a separate class in order to reuse for 
+		 * each profile statistic
+		 */
 		Composite compositeOccupancy = new Composite(compositeProgressBars, SWT.NONE);
 		
+		/** make a small canvas to hold bar graph for "occupancy" */
 		canvasOccupancy = new Canvas(compositeOccupancy, SWT.NONE);
-		canvasOccupancy.setBounds(0, 0, 262, 50);
+		canvasOccupancy.setBounds(0, 0, 265, 50);
 		
 		
 		/** Title and profile log file dialog */
@@ -274,55 +291,95 @@ public class BaseWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				FileHandler fh = new FileHandler( BaseWindow.this.shell );
-				
+
 				/** file dialog */
 				String tmp_str = fh.onLoadMap( profile_map );
-				
-				/** set UI file name displayed */
-				txtProfileData.setText( tmp_str );
-				
-				/** Set the combo box controls */
-				/** get available method names */
-				List<String> l_meth = new ArrayList<String>();
-				l_meth.add( "All" ); 
-				l_meth.addAll( profile_map.methods() );
-				
-				/** check for a healthy result */
-				if( l_meth.isEmpty() == false ){
-				
-					/** set combo items */
-					comboMethods.setItems( l_meth.toArray( new String[0] ) );
-					
-					/** default to first item in list "All" */
-					comboMethods.select(0);
-				}
-				
-				/** get available option names */
-				List<String> l_opt = new ArrayList<String>();
-				l_opt.add( "All" ); 
-				l_opt.addAll( profile_map.options() );
-				
-				/** check for a healthy result */
-				if( l_opt.isEmpty() == false ){
-				
-					/** set combo items */
-					comboOptions.setItems( l_opt.toArray( new String[0] ) );
-					
-					/** default to first item in list "All" */
-					comboOptions.select(0);
-				}
-				
-				/** populate the progress bars with "All" as default */
-				/** create a polygon shape for indicator */
-				MetricShapeDecorator i = new MetricShapeDecoratorBorder( 
-							( new MetricShapeBase( BaseWindow.this.canvasOccupancy, 0, 0, SWT.NULL) )  
-						);
-				
-				i.setColor(243, 213, 185);
-				i.draw();
-				
-				BaseWindow.this.profileTable.set( profile_map );
 
+				if( tmp_str != null ){
+
+					/** set UI file name displayed */
+					txtProfileData.setText( tmp_str );
+
+					/** Set the combo box controls */
+					/** get available method names */
+					List<String> l_meth = new ArrayList<String>();
+					l_meth.add( "All" ); 
+					l_meth.addAll( profile_map.methods() );
+
+					/** check for a healthy result */
+					if( l_meth.isEmpty() == false ){
+
+						/** set combo items */
+						comboMethods.setItems( l_meth.toArray( new String[0] ) );
+
+						/** default to first item in list "All" */
+						comboMethods.select(0);
+					}
+
+					/** get available option names */
+					List<String> l_opt = new ArrayList<String>();
+					l_opt.add( "All" ); 
+					l_opt.addAll( profile_map.options() );
+
+					/** check for a healthy result */
+					if( l_opt.isEmpty() == false ){
+
+						/** set combo items */
+						comboOptions.setItems( l_opt.toArray( new String[0] ) );
+
+						/** default to first item in list "All" */
+						comboOptions.select(0);
+					}
+
+
+
+
+
+					/** populate the progress bars with "All" as default */
+					/** TODO this section should be moved to a new class so that
+					 * several things can be done: 1. show possible profile metrics as
+					 * greyed out ( setAlpha( 63 ) ) bars 2. populate those that match
+					 * profile log options when file is loaded  3. list should be 
+					 * greyed out in response to combo box filtering
+					 */
+
+					/** create a label */
+					Label l = new Label( BaseWindow.this.canvasOccupancy, SWT.NONE );
+					l.setText("Occupancy (" 
+							+ Double.toString( profile_map.average( "occupancy" ) ).subSequence(0, 5) 
+							+ ") ");
+					l.setLocation(0, 0);
+					l.setAlignment(SWT.CENTER);
+					l.setSize(260, 20);
+
+					/** create a polygon shape for indicator */
+					MetricShapeDecoratorBorder i = new MetricShapeDecoratorBorder( 
+
+							/**  set length to 260 px */
+							( new MetricShapeBase( BaseWindow.this.canvasOccupancy, 0, 0, 260, SWT.NULL) )
+
+							/** border width 1 px */
+							, 1 
+							);
+
+					/** set background for bar graph */
+					i.base.setColor(219, 219, 219);
+
+					/** set border color */
+					i.setColor( 0, 0, 0 );
+
+					i.draw();
+					try {
+						i.setBar( profile_map.average( "occupancy" ), 45, 196 , 43);
+					} catch (BadAttributeValueExpException e1) {
+						e1.printStackTrace();
+					}
+
+
+					/** populate table in bottom panel */			
+					BaseWindow.this.profileTable.set( profile_map );
+
+				}
 			}
 		});
 		/** END Profile Data Panel */

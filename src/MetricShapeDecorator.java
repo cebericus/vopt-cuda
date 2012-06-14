@@ -1,7 +1,4 @@
-/**
- * 
- */
-
+/** Copyright 2012 Cole Nelson  */
 
 /**
  * @author nelsoncs

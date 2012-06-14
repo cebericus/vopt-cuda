@@ -1,3 +1,5 @@
+/** Copyright 2012 Cole Nelson  */
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 
@@ -43,40 +45,42 @@ public class FileHandler {
 		/** newlines */
 		char eol = System.getProperty("line.separator").charAt(0); 
 
-		try {
-			String filename = fileChooser.open();
-
-			FileReader in_file = new FileReader( filename );
-
-			/** open file with buffered io */
-			BufferedReader in_f_read = new BufferedReader( in_file );	
-
-			/** give file handle to text widget */
-			/** TODO This will break !!!!!! when the Text box is overrun */
-			StringBuffer str_buf = new StringBuffer();
-			
-			String str = new String();
-			str = null;
-			
-			do{
-				
-				if( str != null )
-				{
-					str_buf.append( str + eol  );
-				}
-				
-			} while( (str = in_f_read.readLine()) != null ) ;
-			
-			
-			text.setText( str_buf.toString() );
+		String filename = fileChooser.open();
 		
+		if( filename != null ){
 
-		} catch (Exception e) {
-			System.out.println( "onLoad exception: " + e.getMessage() );
-			e.printStackTrace();
-		}
+			try {
+				FileReader in_file = new FileReader( filename );
+
+				/** open file with buffered io */
+				BufferedReader in_f_read = new BufferedReader( in_file );	
+
+				/** give file handle to text widget */
+				/** TODO This will break !!!!!! when the Text box is overrun */
+				StringBuffer str_buf = new StringBuffer();
+
+				String str = new String();
+				str = null;
+
+				do{
+
+					if( str != null )
+					{
+						str_buf.append( str + eol  );
+					}
+
+				} while( (str = in_f_read.readLine()) != null ) ;
+
+
+				text.setText( str_buf.toString() );
+
+
+			} catch (Exception e) {
+				System.out.println( "onLoad exception: " + e.getMessage() );
+				e.printStackTrace();
+			}
 	
-		
+		}
 	}
 	
 	/**
@@ -97,23 +101,25 @@ public class FileHandler {
 
 		fileChooser.setFilterExtensions( new String[] { "*.log" } );
 
-		String filename = null;
-		
-		try {
-			filename = fileChooser.open();
+		String filename = fileChooser.open();
 
-			FileReader in_file = new FileReader( filename );
+		if( filename != null ){
 
-			/** open file with buffered io */
-			BufferedReader in_f_read = new BufferedReader( in_file );	
+			try {
 
-			profileMap.parse( in_f_read ); 
+				FileReader in_file = new FileReader( filename );
 
-		} catch (Exception e) {
-			System.out.println( "onLoad exception: " + e.getMessage() );
-			e.printStackTrace();
+				/** open file with buffered io */
+				BufferedReader in_f_read = new BufferedReader( in_file );	
+
+				profileMap.parse( in_f_read ); 
+
+			} catch (Exception e) {
+				System.out.println( "onLoad exception: " + e.getMessage() );
+				e.printStackTrace();
+			}
 		}
-	
+		
 		return filename;
 	}
 

@@ -1,7 +1,4 @@
-/**
- * 
- */
-
+/** Copyright 2012 Cole Nelson  */
 
 /**
  * interface specification for isometric shape decorator pattern

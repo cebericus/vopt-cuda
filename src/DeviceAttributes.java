@@ -1,3 +1,4 @@
+/** Copyright 2012 Cole Nelson  */
 
 import static jcuda.driver.CUdevice_attribute.*;
 import static jcuda.driver.JCudaDriver.*;
