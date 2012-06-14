@@ -2,7 +2,7 @@
 
 Cole S. Nelson, Ph.D. (2012)  
 
-Abstract: 
+<b>Abstract:</b> 
 The Compute Unified Device Architecture (CUDA) is a combined hardware and software 
 model for general-purpose graphics processing unit (GP-GPU) parallel computing. Successful 
 utilization of GP-GPU computing requires an understanding of the interaction 
