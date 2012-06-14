@@ -1,5 +1,5 @@
-vis-prof-4b
-===========
+vis-prof
+========
 
 Requires SWT. 
 
