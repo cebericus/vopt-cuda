@@ -1,6 +1,6 @@
 <b>Visual Occupancy and Performance Tool for CUDA</b> 
 
-Cole S. Nelson (2012)  
+Cole S. Nelson, Ph.D. (2012)  
 
 Abstract: 
 The Compute Unified Device Architecture (CUDA) is a combined hardware and software 
