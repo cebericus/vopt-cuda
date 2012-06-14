@@ -141,15 +141,24 @@ public class MetricShapeDecoratorBorder extends MetricShapeDecorator {
 		c.dispose();		
 	}
 	
-	/* (non-Javadoc)
-	 * @see bui.IsoShapeBase#setColor()
+	/**
+	 * @param r
+	 * @param g
+	 * @param b
 	 */
 	@Override
-	public void setColor(  int r, int g, int b ) {
-
+	public void setColor(  int r, int g, int b ){
 		this.color = new Color( base.parent.getDisplay(), r, g, b );
 	}
 
+	/**
+	 * 
+	 * @param color
+	 */
+	public void setColor(  Color color ) {
+		this.setColor( color.getRed(), color.getGreen(), color.getBlue() );
+	}
+	
 	
 	@Override
 	public void tryDispose(){

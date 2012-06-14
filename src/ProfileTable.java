@@ -85,6 +85,10 @@ public class ProfileTable {
 		
 		
 	}
+	
+	public void dispose(){
+		this.table.dispose();
+	}
 
 	/**
 	 * @param args

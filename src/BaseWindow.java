@@ -50,7 +50,7 @@ public class BaseWindow {
 	private ProfileTable profileTable;
 	private Text txtProfileData;
 	
-	/** widgets for left ahnd panel */
+	/** widgets for left hand panel */
 	private Combo comboMethods;
 	private Combo comboOptions;
 
@@ -62,6 +62,9 @@ public class BaseWindow {
 
 	/** movable shape for center canvas */
 	private MetricShapeBase m;
+	
+	/** color palette */
+	public Palette palette;
 
 
 	/**
@@ -82,6 +85,10 @@ public class BaseWindow {
 	 * 
 	 */
 	public BaseWindow(){
+		
+		this.shell = new Shell();
+		
+		this.palette = new Palette( this.shell.getDisplay() );
 		
 		this.profile_map = new ProfileMap();
 	}
@@ -106,8 +113,9 @@ public class BaseWindow {
 	 * destructor for SWT must dispose of all resources created with new.
 	 */
 	private void exit() {
-		//this.profileTable.dispose();
-		//this.ptxCode.dispose();
+		
+		this.profileTable.dispose();
+
 	    this.shell.dispose();
 	    System.exit(0);
 	}
@@ -119,7 +127,7 @@ public class BaseWindow {
 		
 		/** BEGIN Main Shell */
 		
-		shell = new Shell();
+
 		shell.setSize(1350, 900);
 		shell.setForeground(SWTResourceManager.getColor(76, 76, 76));
 		
@@ -363,14 +371,14 @@ public class BaseWindow {
 							);
 
 					/** set background for bar graph */
-					i.base.setColor(219, 219, 219);
+					i.base.setColor( palette.getGrey() );
 
 					/** set border color */
-					i.setColor( 0, 0, 0 );
+					i.setColor( palette.getBlk() );
 
 					i.draw();
 					try {
-						i.setBar( profile_map.average( "occupancy" ), 45, 196 , 43);
+						i.setBar( profile_map.average( "occupancy" ), palette.getGrn_crazy());
 					} catch (BadAttributeValueExpException e1) {
 						e1.printStackTrace();
 					}
