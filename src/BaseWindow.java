@@ -65,6 +65,9 @@ public class BaseWindow {
 	
 	/** color palette */
 	public Palette palette;
+	
+	/** Canvas class for occupancy calculator */
+	CanvasGPU canvasGPU;
 
 
 	/**
@@ -228,7 +231,7 @@ public class BaseWindow {
 		gd_lblProfileData.widthHint = 250;
 		
 		lblProfileData.setLayoutData(gd_lblProfileData);
-		lblProfileData.setFont(SWTResourceManager.getFont("Ubuntu", 11, SWT.BOLD));
+		lblProfileData.setFont(SWTResourceManager.getFont("Calibri", 11, SWT.BOLD));
 		lblProfileData.setAlignment(SWT.CENTER);
 		lblProfileData.setText("Profile Data");
 		
@@ -290,9 +293,46 @@ public class BaseWindow {
 		
 		/** make a small canvas to hold bar graph for "occupancy" */
 		canvasOccupancy = new Canvas(compositeOccupancy, SWT.NONE);
-		canvasOccupancy.setBounds(0, 0, 265, 50);
+		canvasOccupancy.setBounds(0, 10, 265, 50);
 		
 		
+		
+		/** END Profile Data Panel */
+		
+
+		/** BEGIN Canvas Drawing Area */
+		this.canvasGPU = new CanvasGPU( shell, devices, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		canvasGPU.setLayout(null);
+		GridData gd_canvasGPU = new GridData(SWT.LEFT, SWT.FILL, true, true, 1, 1);
+		gd_canvasGPU.widthHint = 1010;
+		gd_canvasGPU.heightHint = 720;
+
+		gd_canvasGPU.minimumWidth = 200;
+		gd_canvasGPU.minimumHeight = 250;
+		canvasGPU.setLayoutData(gd_canvasGPU);
+		canvasGPU.setVisible(true);
+		canvasGPU.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		/** END Canvas Drawing Area */
+		
+		/** BEGIN lower panel */
+		
+		/** BEGIN first tab of lower panel - profile data table */
+		profileTable = new ProfileTable(shell, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+
+		GridData gd_profileTable = new GridData(SWT.LEFT, SWT.FILL, true, true, 2, 1);
+		gd_profileTable.heightHint = 200;
+		gd_profileTable.widthHint = 1250;
+		//profileTable.setLayoutData(gd_profileTable);
+		new Label(shell, SWT.NONE);
+		new Label(shell, SWT.NONE);
+		/** END first tab of lower panel - profile data table */
+
+		/** END lower panel */
+
+
+		/** BEGIN Listeners */
+		
+		/** BEGIN Profile log listener */
 		/** Title and profile log file dialog */
 		buttonProfileLog.addSelectionListener(new SelectionAdapter() {
 
@@ -351,77 +391,66 @@ public class BaseWindow {
 					 * greyed out in response to combo box filtering
 					 */
 
-					/** create a label */
-					Label l = new Label( BaseWindow.this.canvasOccupancy, SWT.NONE );
-					l.setText("Occupancy (" 
-							+ Double.toString( profile_map.average( "occupancy" ) ).subSequence(0, 5) 
-							+ ") ");
-					l.setLocation(0, 0);
-					l.setAlignment(SWT.CENTER);
-					l.setSize(260, 20);
+					if( BaseWindow.this.profile_map.contains( "occupancy" ) ){
+						
+						/** create a label */
+						Label l = new Label( BaseWindow.this.canvasOccupancy, SWT.BOLD );
+						l.setFont(SWTResourceManager.getFont("Calibri", 11, SWT.BOLD));
+						l.setText("Occupancy (" 
+								+ Double.toString( profile_map.average( "occupancy" ) ).subSequence(0, 5) 
+								+ ") ");
+						l.setLocation(0, 0);
+						l.setAlignment(SWT.CENTER);
+						l.setSize(260, 20);
 
-					/** create a polygon shape for indicator */
-					MetricShapeDecoratorBorder i = new MetricShapeDecoratorBorder( 
+						/** create a polygon shape for indicator */
+						MetricShapeDecoratorBorder i = new MetricShapeDecoratorBorder( 
 
-							/**  set length to 260 px */
-							( new MetricShapeBase( BaseWindow.this.canvasOccupancy, 0, 0, 260, SWT.NULL) )
+								/**  set length to 260 px */
+								( new MetricShapeBase( BaseWindow.this.canvasOccupancy, 1, 0, 258, SWT.NULL) )
 
-							/** border width 1 px */
-							, 1 
-							);
+								/** border width 1 px */
+								, 1 
+								);
 
-					/** set background for bar graph */
-					i.base.setColor( palette.getGrey() );
+						/** set background for bar graph */
+						i.base.setColor( palette.getOr_calm() );
 
-					/** set border color */
-					i.setColor( palette.getBlk() );
+						/** set border color */
+						i.setColor( palette.getBlk() );
 
-					i.draw();
-					try {
-						i.setBar( profile_map.average( "occupancy" ), palette.getGrn_crazy());
-					} catch (BadAttributeValueExpException e1) {
-						e1.printStackTrace();
+						i.draw();
+						try {
+							i.setBar( profile_map.average( "occupancy" ), palette.getRed_angry() );
+						} catch (BadAttributeValueExpException e1) {
+							e1.printStackTrace();
+						}
 					}
 
+					
+					/** TODO move this set to ControllerCanvasGPU */
+					/** populate canvasGPU threads/block */
+					if( BaseWindow.this.profile_map.contains( "threadblocksizeX" ) )
+						BaseWindow.this.canvasGPU.setThreadsPerBlockX( profile_map.average( "threadblocksizeX" ) );
+
+					if( BaseWindow.this.profile_map.contains( "threadblocksizeY" ) )
+						BaseWindow.this.canvasGPU.setThreadsPerBlockY( profile_map.average( "threadblocksizeY" ) );
+					
+					if( BaseWindow.this.profile_map.contains( "threadblocksizeZ" ) )
+						BaseWindow.this.canvasGPU.setThreadsPerBlockZ( profile_map.average( "threadblocksizeZ" ) );
+					
+
+					
 
 					/** populate table in bottom panel */			
 					BaseWindow.this.profileTable.set( profile_map );
-
 				}
 			}
 		});
-		/** END Profile Data Panel */
-
-		/** BEGIN Canvas Drawing Area */
-		Canvas canvasGPU = new CanvasGPU( shell, devices, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		canvasGPU.setLayout(null);
-		GridData gd_canvasGPU = new GridData(SWT.LEFT, SWT.FILL, true, true, 1, 1);
-		gd_canvasGPU.widthHint = 1010;
-		gd_canvasGPU.heightHint = 720;
-
-		gd_canvasGPU.minimumWidth = 200;
-		gd_canvasGPU.minimumHeight = 250;
-		canvasGPU.setLayoutData(gd_canvasGPU);
-		canvasGPU.setVisible(true);
-		canvasGPU.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-		/** END Canvas Drawing Area */
+		/** END Profile log listener */
 		
-		/** BEGIN lower panel */
 		
-		/** BEGIN first tab of lower panel - profile data table */
-		profileTable = new ProfileTable(shell, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
-
-		GridData gd_profileTable = new GridData(SWT.LEFT, SWT.FILL, true, true, 2, 1);
-		gd_profileTable.heightHint = 200;
-		gd_profileTable.widthHint = 1250;
-		//profileTable.setLayoutData(gd_profileTable);
-		new Label(shell, SWT.NONE);
-		new Label(shell, SWT.NONE);
-		/** END first tab of lower panel - profile data table */
-
-		/** END lower panel */
-
-
+		/** END Listeners */
 
 //		textSearchCode = new Text(shell, SWT.BORDER | SWT.H_SCROLL | SWT.SEARCH | SWT.CANCEL);
 //		GridData gd_textSearchCode = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);

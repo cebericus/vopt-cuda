@@ -36,8 +36,33 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 	static final int LABEL_WIDTH = 50;
 	static final int LABEL_POSN = 940;
 	static final int TEXT_STYLE = SWT.BORDER | SWT.RIGHT;
+	
+	private Text textThreadsPerBlockX;
+	private Text textThreadsPerBlockY;
+	private Text textThreadsPerBlockZ;
+	
+	private double threadsPerBlockX;
+	private double threadsPerBlockY;
+	private double threadsPerBlockZ;
 
-	CanvasGPU( Composite shlVisualProfiler, DeviceQuery devices, int style ) {
+	private Combo comboThreadsPerBlock;
+	private double threadsPerBlock;
+
+	/**
+	 * constructor
+	 * TODO there is an issue with this class, thread and block XYZ need to be 
+	 * maintained as a set
+	 * so that a change during runtime can be identified and dealt with.
+	 * the current practice of using the average over the whole run then casting
+	 * it to an int is not going to work in the long run.   So, presently, there
+	 * is an assumption overall that there is only one kernel and the kernel 
+	 * parameters do not change.
+	 * 
+	 * @param shlVisualProfiler
+	 * @param devices
+	 * @param style
+	 */
+	public CanvasGPU( Composite shlVisualProfiler, DeviceQuery devices, int style ) {
 		
 		super( shlVisualProfiler, style | SWT.BORDER );
 		
@@ -53,7 +78,7 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 		Label labelComputeCapability = new Label( this, SWT.NULL );
 		labelComputeCapability.setFont(font);
 		labelComputeCapability.setText( devices.get()[0].getMajor() + "."
-											+ devices.get()[0].getMajor() );
+											+ devices.get()[0].getMinor() );
 		labelComputeCapability.setBounds( 968,  15, 40, FONT_DISPLAY_HEIGHT );
 		
 		
@@ -140,30 +165,135 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 		
 		Combo comboRegsPerThread = new Combo( this, TEXT_STYLE );
 		comboRegsPerThread.setFont(font);
-		comboRegsPerThread.setText( "" );
 		comboRegsPerThread.setBounds( 5, 369, 160, FONT_DISPLAY_HEIGHT );
 		comboRegsPerThread.setFocus();
 		
-		Combo comboThreadsPerBlock = new Combo( this, TEXT_STYLE );
-		comboThreadsPerBlock.setFont(font);
-		comboThreadsPerBlock.setText( "" );
-		comboThreadsPerBlock.setBounds( 5, 520, 160, FONT_DISPLAY_HEIGHT );
-		comboThreadsPerBlock.setFocus();
 		
-		Text textThreadsPerBlockX = new Text( this, TEXT_STYLE );
-		textThreadsPerBlockX.setFont(font);
-		textThreadsPerBlockX.setBounds( 5, 560, 40, FONT_DISPLAY_HEIGHT );
-		Text textThreadsPerBlockY = new Text( this, TEXT_STYLE );
-		textThreadsPerBlockY.setFont(font);
-		textThreadsPerBlockY.setBounds( 55, 560, 40, FONT_DISPLAY_HEIGHT );
-		Text textThreadsPerBlockZ = new Text( this, TEXT_STYLE );
-		textThreadsPerBlockZ.setFont(font);
-		textThreadsPerBlockZ.setBounds( 105, 560, 40, FONT_DISPLAY_HEIGHT );
+		/** BEGIN threads per block */
+		
+		this.textThreadsPerBlockX = new Text( this, TEXT_STYLE );
+		this.textThreadsPerBlockX.setFont(font);
+		this.textThreadsPerBlockX.setBounds( 5, 560, 40, FONT_DISPLAY_HEIGHT );
+		
+		this.textThreadsPerBlockY = new Text( this, TEXT_STYLE );
+		this.textThreadsPerBlockY.setFont(font);
+		this.textThreadsPerBlockY.setBounds( 55, 560, 40, FONT_DISPLAY_HEIGHT );
+		
+		this.textThreadsPerBlockZ = new Text( this, TEXT_STYLE );
+		this.textThreadsPerBlockZ.setFont(font);
+		this.textThreadsPerBlockZ.setBounds( 105, 560, 40, FONT_DISPLAY_HEIGHT );
+		
+		/** default to 1 */
+		this.setThreadsPerBlockX( 1 );
+		this.setThreadsPerBlockY( 1 );
+		this.setThreadsPerBlockZ( 1 );
+		
+		this.comboThreadsPerBlock = new Combo( this, TEXT_STYLE );
+		this.comboThreadsPerBlock.setFont(font);
+		
+		/** calculate threads per block ->> move to controller class */
+		this.setComboThreadsPerBlock( this.calcThreadsPerBlock() );
+		this.comboThreadsPerBlock.setBounds( 5, 520, 160, FONT_DISPLAY_HEIGHT );
+		this.comboThreadsPerBlock.setFocus();
 		
 		comboSharedMemPerBlock.setFocus();
 		comboSharedMemPerBlock.select(0);
 		
-		/** Canvas SWT Listeners */
+
+		/** BEGIN Text listeners */
+		
+		/** TODO better error handling and/or entry validation */
+		textThreadsPerBlockX.addListener( SWT.DefaultSelection, new Listener() {
+
+			public void handleEvent(Event e) {
+				
+				System.out.println( "X defaultSelection ");
+				
+				
+				try {
+					/** grab the new value and convert to double, update class attribute */
+					CanvasGPU.this.threadsPerBlockX = Double
+							.valueOf(textThreadsPerBlockX.getText());
+
+					CanvasGPU.this.setComboThreadsPerBlock(CanvasGPU.this
+							.calcThreadsPerBlock());
+					
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+			}
+		});
+
+		textThreadsPerBlockY.addListener( SWT.DefaultSelection, new Listener() {
+
+			public void handleEvent(Event e) {
+				
+				try {
+					/** grab the new value and convert to double, update class attribute */
+					CanvasGPU.this.threadsPerBlockY = Double
+							.valueOf(textThreadsPerBlockY.getText());
+
+					CanvasGPU.this.setComboThreadsPerBlock(CanvasGPU.this
+							.calcThreadsPerBlock());
+					
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+			}
+		});
+		
+		textThreadsPerBlockZ.addListener( SWT.DefaultSelection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				try {
+
+					/** grab the new value and convert to double, update class attribute */
+					CanvasGPU.this.threadsPerBlockZ = Double
+							.valueOf(textThreadsPerBlockZ.getText());
+
+					CanvasGPU.this.setComboThreadsPerBlock(CanvasGPU.this
+							.calcThreadsPerBlock());
+
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+			}
+		});
+		
+		/** Modify listeners to enable profile log parsing */
+		/** TODO needs better error checking */
+		textThreadsPerBlockX.addListener( SWT.Modify, new Listener() {
+
+			public void handleEvent(Event e) {
+				System.out.println( "X defaultSelection ");
+				if( e.keyCode == SWT.CR)
+					CanvasGPU.this.setComboThreadsPerBlock( CanvasGPU.this.calcThreadsPerBlock() );
+			}
+		});
+
+		textThreadsPerBlockY.addListener( SWT.Modify, new Listener() {
+
+			public void handleEvent(Event e) {
+				CanvasGPU.this.setComboThreadsPerBlock( CanvasGPU.this.calcThreadsPerBlock() );
+			}
+		});
+		
+		textThreadsPerBlockZ.addListener( SWT.Modify, new Listener() {
+
+			public void handleEvent(Event e) {
+				CanvasGPU.this.setComboThreadsPerBlock( CanvasGPU.this.calcThreadsPerBlock() );
+			}
+		});
+		/** END Text listeners */
+		
+		
+
+		
+		/** END threads per blocks */
+		
+		
+		/** BEGIN Canvas SWT Listeners */
 		
 		/** Paint listener */
 		this.addListener (SWT.Paint, new Listener () {
@@ -184,6 +314,7 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 		this.addMouseListener( this );
 		this.addMouseMoveListener( this );
 		
+		/** END Canvas SWT Listeners */
 	}
 
 
@@ -200,7 +331,6 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 
 			Image image = new Image(  this.getDisplay(), image_data );
 			
-
 			GC gc = new GC( this );
 			
 			//gc.setAlpha(64);
@@ -215,20 +345,15 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 		}
 		
 	}
+
 	
 	/**
 	 * 
-	 * 
-	 * @param str_x
-	 * @param str_y
-	 * @param str_z
+	 * @return X * Y * Z
 	 */
-	public void setThreadPerBlockXYZ( String str_x, String str_y, String str_z ){
-		
-		
-		
+	private double calcThreadsPerBlock(){
+		return this.threadsPerBlockX * this.threadsPerBlockY * this.threadsPerBlockZ;
 	}
-
 
 	protected void keyPressed(KeyEvent ke) {
 		// TODO Auto-generated method stub
@@ -261,6 +386,77 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 	}
 	
 	/**
+	 * @param textThreadsPerBlockX the textThreadsPerBlockX to set
+	 */
+	private void setTextThreadsPerBlockX( double value ) {
+		this.textThreadsPerBlockX.setText( Integer.toString( (int) value ) );
+	}
+
+
+	/**
+	 * @param textThreadsPerBlockY the textThreadsPerBlockY to set
+	 */
+	private void setTextThreadsPerBlockY( double value ) {
+		this.textThreadsPerBlockY.setText( Integer.toString( (int) value ) );
+	}
+
+
+	/**
+	 * @param textThreadsPerBlockZ the textThreadsPerBlockZ to set
+	 */
+	private void setTextThreadsPerBlockZ( double value ) {
+		this.textThreadsPerBlockZ.setText( Integer.toString( (int) value ) );
+	}
+
+	/**
+	 * @param threadsPerBlockX the threadsPerBlockX to set
+	 */
+	public void setThreadsPerBlockX(double threadsPerBlockX) {
+		this.threadsPerBlockX = threadsPerBlockX;
+		
+		this.setTextThreadsPerBlockX( this.threadsPerBlockX );
+	}
+
+
+	/**
+	 * sets class attribute and also the text box displayed
+	 * 
+	 * @param threadsPerBlockY the threadsPerBlockY to set
+	 */
+	public void setThreadsPerBlockY(double threadsPerBlockY) {
+		this.threadsPerBlockY = threadsPerBlockY;
+		
+		this.setTextThreadsPerBlockY( this.threadsPerBlockY );
+	}
+
+
+	/**
+	 * sets class attribute and also the text box displayed
+	 * @param threadsPerBlockZ the threadsPerBlockZ to set
+	 */
+	public void setThreadsPerBlockZ(double threadsPerBlockZ) {
+		this.threadsPerBlockZ = threadsPerBlockZ;
+		
+		this.setTextThreadsPerBlockZ( this.threadsPerBlockZ );
+	}
+	
+	private void setComboThreadsPerBlock( double value ) {
+		this.comboThreadsPerBlock.setText( Integer.toString( (int) value ) );
+	}
+	
+	/**
+	 * @param threadsPerBlock the threadsPerBlock to set
+	 */
+	public void setThreadsPerBlock( double threadsPerBlock ) {
+		this.threadsPerBlock = threadsPerBlock;
+		
+		this.setComboThreadsPerBlock( this.threadsPerBlock );
+	}
+
+
+	/**
+	 * sets class attribute and also the text box displayed
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {

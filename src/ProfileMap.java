@@ -275,6 +275,19 @@ public class ProfileMap {
 		return options;
 	}
 	
+	/**
+	 * checks Map for an option
+	 * 
+	 * @param option
+	 * @return true if option exists in map, otherwise false
+	 */
+	public boolean contains( String option ){
+		
+		if( this.profileMap.containsKey( option ) )
+			return true;
+		
+		return false;
+	}
 	
 	/**
 	 * takes in a (valid) list of profiler option names and filters them by the 
