@@ -32,8 +32,7 @@ into a unified, visual reference and analysis tool.  This removes several practi
 obstacles for the CUDA programmer and facilitates the analysis and optimization of
  CUDA software.
 
-Notes:
-=====
+<b>Notes:</b>
 
 Requires SWT. 
 
