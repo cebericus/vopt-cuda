@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.Combo;
  * materials in order to analyze a developing CUDA program.
  * 
  * Therefore, I have designed and implemented the Visual Occupancy and Performance 
- * Tool (VOPT) for CUDA with a user-supportive graphical interface.  VOPT combines 
+ * Tool (VOPT) for CUDA.  VOPT combines 
  * the basic CUDA resources: deviceQuery, Occupancy Calculator and Command-Line Profiler 
  * log files into a unified, visual reference and analysis tool.  This removes several 
  * practical obstacles for the CUDA programmer and facilitates the analysis and
@@ -466,8 +466,10 @@ public class BaseWindow {
 					if( BaseWindow.this.profile_map.contains( "threadblocksizeZ" ) )
 						BaseWindow.this.canvasGPU.setThreadsPerBlockZ( profile_map.average( "threadblocksizeZ" ) );
 					
-
-					
+					/** populate canvasGPU registers/thread */
+					if( BaseWindow.this.profile_map.contains( "regperthread" ) )
+						BaseWindow.this.canvasGPU.setRegsPerThread( profile_map.average( "regperthread" ) );
+				
 
 					/** populate table in bottom panel */			
 					BaseWindow.this.profileTable.set( profile_map );

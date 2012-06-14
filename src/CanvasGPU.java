@@ -37,6 +37,9 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 	static final int LABEL_POSN = 940;
 	static final int TEXT_STYLE = SWT.BORDER | SWT.RIGHT;
 	
+	private Combo comboRegsPerThread;
+	private double regsPerThread;
+	
 	private Text textThreadsPerBlockX;
 	private Text textThreadsPerBlockY;
 	private Text textThreadsPerBlockZ;
@@ -52,6 +55,8 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 	 * constructor
 	 * TODO there is an issue with this class, thread and block XYZ need to be 
 	 * maintained as a set
+	 * TODO all combo boxes need a dynamic array to accumulate all entries during 
+	 * a session
 	 * so that a change during runtime can be identified and dealt with.
 	 * the current practice of using the average over the whole run then casting
 	 * it to an int is not going to work in the long run.   So, presently, there
@@ -163,11 +168,19 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 		/** Note: these setFocus() calls are used to cover the chinsy arrows */
 		comboSharedMemPerBlock.setFocus();
 		
-		Combo comboRegsPerThread = new Combo( this, TEXT_STYLE );
-		comboRegsPerThread.setFont(font);
-		comboRegsPerThread.setBounds( 5, 369, 160, FONT_DISPLAY_HEIGHT );
-		comboRegsPerThread.setFocus();
 		
+		/** BEGIN registers per thread */
+		
+		this.comboRegsPerThread = new Combo( this, TEXT_STYLE );
+		this.comboRegsPerThread.setFont(font);
+		this.comboRegsPerThread.setBounds( 5, 369, 160, FONT_DISPLAY_HEIGHT );
+		this.comboRegsPerThread.setFocus();
+		
+		/** default to 0 */
+		this.setRegsPerThread( 0 );
+		
+		/** END registers per thread */
+
 		
 		/** BEGIN threads per block */
 		
@@ -199,7 +212,9 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 		comboSharedMemPerBlock.setFocus();
 		comboSharedMemPerBlock.select(0);
 		
-
+		/** END threads per block */
+		
+		
 		/** BEGIN Text listeners */
 		
 		/** TODO better error handling and/or entry validation */
@@ -385,8 +400,29 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 		
 	}
 	
+	
 	/**
-	 * @param textThreadsPerBlockX the textThreadsPerBlockX to set
+	 * 
+	 * @param value
+	 */
+	private void setComboRegsPerThread( double value ) {
+		this.comboRegsPerThread.setText( Integer.toString( (int) value ) );
+	}
+
+	/**
+	 * 
+	 * @param regsPerThread
+	 */
+	public void setRegsPerThread( double regsPerThread ){
+		this.regsPerThread = regsPerThread;
+		
+		this.setComboRegsPerThread( regsPerThread );
+	}
+	
+	
+	/**
+	 * 
+	 * @param value
 	 */
 	private void setTextThreadsPerBlockX( double value ) {
 		this.textThreadsPerBlockX.setText( Integer.toString( (int) value ) );
@@ -394,7 +430,8 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 
 
 	/**
-	 * @param textThreadsPerBlockY the textThreadsPerBlockY to set
+	 * 
+	 * @param value
 	 */
 	private void setTextThreadsPerBlockY( double value ) {
 		this.textThreadsPerBlockY.setText( Integer.toString( (int) value ) );
@@ -402,7 +439,8 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 
 
 	/**
-	 * @param textThreadsPerBlockZ the textThreadsPerBlockZ to set
+	 * 
+	 * @param value
 	 */
 	private void setTextThreadsPerBlockZ( double value ) {
 		this.textThreadsPerBlockZ.setText( Integer.toString( (int) value ) );

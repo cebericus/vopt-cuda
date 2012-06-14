@@ -25,7 +25,7 @@ resources and some of the 30 or so written reference materials in order to analy
 developing CUDA program.
 
 Therefore, I have designed and implemented the Visual Occupancy and Performance Tool 
-(VOPT) for CUDA with a user-supportive graphical interface.  VOPT combines the basic 
+(VOPT) for CUDA.  VOPT combines the basic 
 CUDA resources: deviceQuery, Occupancy Calculator and Command-Line Profiler log files 
 into a unified, visual reference and analysis tool.  This removes several practical 
 obstacles for the CUDA programmer and facilitates the analysis and optimization of
