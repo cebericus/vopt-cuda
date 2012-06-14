@@ -11,8 +11,9 @@ http://www.jcuda.org
 
 Currently using swt 3.7.2, jcuda 0.4.1 and OpenJDK 1.7.
 
-Visual Occupancy and Performance Tool for CUDA, Cole S. Nelson (2012) 
-Department of Computer Science, Portland State University, Portland Oregon, USA. 
+Visual Occupancy and Performance Tool for CUDA 
+
+Cole S. Nelson (2012)  
 
 Abstract: 
 The Compute Unified Device Architecture (CUDA) is a combined hardware and software 
