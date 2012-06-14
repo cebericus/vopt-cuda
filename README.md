@@ -1,17 +1,4 @@
-vis-prof
-========
-
-Requires SWT. 
-
-http://www.eclipse.org/swt/
-
-Requires JCUDA.
-
-http://www.jcuda.org
-
-Currently using swt 3.7.2, jcuda 0.4.1 and OpenJDK 1.7.
-
-Visual Occupancy and Performance Tool for CUDA 
+<b>Visual Occupancy and Performance Tool for CUDA</b> 
 
 Cole S. Nelson (2012)  
 
@@ -44,3 +31,16 @@ CUDA resources: deviceQuery, Occupancy Calculator and Command-Line Profiler log 
 into a unified, visual reference and analysis tool.  This removes several practical 
 obstacles for the CUDA programmer and facilitates the analysis and optimization of
  CUDA software.
+
+Notes:
+=====
+
+Requires SWT. 
+
+http://www.eclipse.org/swt/
+
+Requires JCUDA.
+
+http://www.jcuda.org
+
+Currently using swt 3.7.2, jcuda 0.4.1 and OpenJDK 1.7.
