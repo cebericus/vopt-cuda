@@ -17,8 +17,7 @@ device is relatively slow and incurs a large overhead in time and physical resou
 For this reason, it is desirable to utilize the CUDA-enabled hardware to a maximal extent 
 and leverage the benefits of parallel execution.  The first step is to examine the 
 “occupancy”, meaning compute-cycle and resource utilization.  To analyze device occupancy 
-there are three basic, yet separate, tools that the CUDA programmer has available.  
-These are deviceQuery which enumerates the CUDA model for the underlying hardware 
+there are three basic, yet separate, tools that the CUDA programmer has available.  These are deviceQuery which enumerates the CUDA model for the underlying hardware 
 platform, the Occupancy Calculator which is a spreadsheet based form that requires the 
 output of deviceQuery and the command-line profiler log file which provides run-time 
 information.  A programmer is faced with transitioning between these three separate 
