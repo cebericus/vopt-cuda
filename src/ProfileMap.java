@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Shell;
  * Each of the sub- HashMap<Integer, String>'s is keyed with the line number and 
  * holds values of the profile data.
  * 
- * Profiler options currently tested (supported, others could fail):
+ * Profiler options currently tested:
  * 
  * gridsize3d, threadblocksize, stasmemperblock, dynmemperblock, regperthread
  * memtransferdir, memtransfersize, memtransferhostmemtype, cacheconfigrequested
@@ -40,7 +40,6 @@ import org.eclipse.swt.widgets.Shell;
  * The exception is ProfileMap.parse(), which should be called before all other
  * functions. 
  * 
- * Team 4b: Michael Barger, Alex Kelly, Cole Nelson
  * @author nelsoncs 2012-May-20. 
  * 
  * TODO does not yet account for a badly formed profile.log file.

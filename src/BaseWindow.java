@@ -157,7 +157,6 @@ public class BaseWindow {
 		
 		/** BEGIN Main Shell */
 		
-
 		shell.setSize(1350, 900);
 		shell.setForeground(SWTResourceManager.getColor(76, 76, 76));
 		
@@ -407,9 +406,6 @@ public class BaseWindow {
 					}
 
 
-
-
-
 					/** populate the progress bars with "All" as default */
 					/** TODO this section should be moved to a new class so that
 					 * several things can be done: 1. show possible profile metrics as
@@ -456,7 +452,7 @@ public class BaseWindow {
 
 					
 					/** TODO move this set to ControllerCanvasGPU */
-					/** populate canvasGPU threads/block */
+					/** populate canvasGPU threads/block with data from profile log*/
 					if( BaseWindow.this.profile_map.contains( "threadblocksizeX" ) )
 						BaseWindow.this.canvasGPU.setThreadsPerBlockX( profile_map.average( "threadblocksizeX" ) );
 
@@ -466,12 +462,15 @@ public class BaseWindow {
 					if( BaseWindow.this.profile_map.contains( "threadblocksizeZ" ) )
 						BaseWindow.this.canvasGPU.setThreadsPerBlockZ( profile_map.average( "threadblocksizeZ" ) );
 					
-					/** populate canvasGPU registers/thread */
+					/** populate canvasGPU registers/thread with data from profile log*/
 					if( BaseWindow.this.profile_map.contains( "regperthread" ) )
 						BaseWindow.this.canvasGPU.setRegsPerThread( profile_map.average( "regperthread" ) );
 				
+					/** populate canvasGPU shared mem/block with data from profile log*/
+					if( BaseWindow.this.profile_map.contains( "stasmemperblock" ) )
+						BaseWindow.this.canvasGPU.setSharedPerBlock( profile_map.average( "stasmemperblock" ) );
 
-					/** populate table in bottom panel */			
+					/** populate table in bottom panel with data from profile log*/			
 					BaseWindow.this.profileTable.set( profile_map );
 				}
 			}
@@ -480,19 +479,6 @@ public class BaseWindow {
 		
 		
 		/** END Listeners */
-
-//		textSearchCode = new Text(shell, SWT.BORDER | SWT.H_SCROLL | SWT.SEARCH | SWT.CANCEL);
-//		GridData gd_textSearchCode = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-//		gd_textSearchCode.widthHint = 332;
-//		textSearchCode.setLayoutData(gd_textSearchCode);
-//		textSearchCode.addListener(SWT.Activate, new Listener() {
-//			public void handleEvent(Event e) {
-//
-//			}
-//		});
-
-
-
 
 	}
 }

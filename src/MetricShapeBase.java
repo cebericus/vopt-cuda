@@ -1,7 +1,4 @@
-/**
- * 
- */
-
+/** Copyright 2012 Cole Nelson  */
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
@@ -48,16 +45,16 @@ public class MetricShapeBase implements MetricShape {
 		this.shape = new int[8];
 		
 		this.shape[0] = x;
-		this.shape[1] = y+25;
+		this.shape[1] = y + 25;
 		
-		this.shape[2] = x+ length;
-		this.shape[3] = y+25;
+		this.shape[2] = x + length;
+		this.shape[3] = y + 25;
 		
-		this.shape[4] = x+ length;
-		this.shape[5] = y+40;
+		this.shape[4] = x + length;
+		this.shape[5] = y + 40;
 		
 		this.shape[6] = x;
-		this.shape[7] = y+40;
+		this.shape[7] = y + 40;
 	}
 	
 	

@@ -1,3 +1,5 @@
+/** Copyright 2012 Cole Nelson  */
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -9,9 +11,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-/**
- * 
- */
 
 /**
  * @author nelsoncs

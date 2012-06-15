@@ -37,6 +37,9 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 	static final int LABEL_POSN = 940;
 	static final int TEXT_STYLE = SWT.BORDER | SWT.RIGHT;
 	
+	private Combo comboSharedPerBlock;
+	private double sharedPerBlock;
+	
 	private Combo comboRegsPerThread;
 	private double regsPerThread;
 	
@@ -73,12 +76,9 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 		
 		/** font for labels and widgets */
 		Font font = new Font( shlVisualProfiler.getDisplay(), FONT, FONT_SZ, FONT_STYLE ); 
-		
-		/** set the widgets on the canvas */
-		
-		/** default to first device */
-		/** TODO enable switching devices for occupancy calculator */
-		
+
+		/** BEGIN device side data display */
+		/** default to first device TODO enable switching devices for occupancy calculator */
 		/** Compute capability */
 		Label labelComputeCapability = new Label( this, SWT.NULL );
 		labelComputeCapability.setFont(font);
@@ -159,15 +159,22 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 				devices.get()[0].getAttributes().get(CU_DEVICE_ATTRIBUTE_MAX_THREADS_PER_MULTIPROCESSOR) ) );
 		labelMaxThdPerSM.setBounds( LABEL_POSN, 690, LABEL_WIDTH, FONT_DISPLAY_HEIGHT );
 		
+		/** END device side data display */
+		
+		
 		/** User side controls and labels */
 		
-		Combo comboSharedMemPerBlock = new Combo( this, TEXT_STYLE );
-		comboSharedMemPerBlock.setFont(font);
-		comboSharedMemPerBlock.setText( "" );
-		comboSharedMemPerBlock.setBounds( 5, 132, 160, FONT_DISPLAY_HEIGHT );
-		/** Note: these setFocus() calls are used to cover the chinsy arrows */
-		comboSharedMemPerBlock.setFocus();
+		/** BEGIN shared memory per block */
 		
+		this.comboSharedPerBlock = new Combo( this, TEXT_STYLE );
+		this.comboSharedPerBlock.setFont(font);
+		this.comboSharedPerBlock.setBounds( 5, 132, 160, FONT_DISPLAY_HEIGHT );
+		/** Note: these setFocus() calls are used to cover the chintzy arrows */
+		this.comboSharedPerBlock.setFocus();
+		
+		this.setSharedPerBlock( 0 );
+		
+		/** END shared memory per block */
 		
 		/** BEGIN registers per thread */
 		
@@ -209,8 +216,8 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 		this.comboThreadsPerBlock.setBounds( 5, 520, 160, FONT_DISPLAY_HEIGHT );
 		this.comboThreadsPerBlock.setFocus();
 		
-		comboSharedMemPerBlock.setFocus();
-		comboSharedMemPerBlock.select(0);
+		this.comboSharedPerBlock.setFocus();
+		this.comboSharedPerBlock.select(0);
 		
 		/** END threads per block */
 		
@@ -287,28 +294,7 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 		
 		/** Modify listeners to enable profile log parsing */
 		/** TODO needs better error checking */
-//		textThreadsPerBlockX.addListener( SWT.Modify, new Listener() {
-//
-//			public void handleEvent(Event e) {
-//				System.out.println( "X defaultSelection ");
-//				if( e.keyCode == SWT.CR)
-//					CanvasGPU.this.setComboThreadsPerBlock( CanvasGPU.this.calcThreadsPerBlock() );
-//			}
-//		});
-//
-//		textThreadsPerBlockY.addListener( SWT.Modify, new Listener() {
-//
-//			public void handleEvent(Event e) {
-//				CanvasGPU.this.setComboThreadsPerBlock( CanvasGPU.this.calcThreadsPerBlock() );
-//			}
-//		});
-//		
-//		textThreadsPerBlockZ.addListener( SWT.Modify, new Listener() {
-//
-//			public void handleEvent(Event e) {
-//				CanvasGPU.this.setComboThreadsPerBlock( CanvasGPU.this.calcThreadsPerBlock() );
-//			}
-//		});
+
 		/** END Text listeners */
 		
 		
@@ -410,6 +396,24 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 	}
 	
 	
+	/**
+	 * @param comboSharedPerBlock the comboSharedPerBlock to set
+	 */
+	private void setComboSharedPerBlock( double sharedPerBlock) {
+		this.comboSharedPerBlock.setText( Integer.toString( (int) sharedPerBlock ) );
+	}
+
+
+	/**
+	 * @param sharedPerBlock the sharedPerBlock to set
+	 */
+	public void setSharedPerBlock( double sharedPerBlock ) {
+		this.sharedPerBlock = sharedPerBlock;
+		
+		this.setComboSharedPerBlock( sharedPerBlock );
+	}
+
+
 	/**
 	 * 
 	 * @param value

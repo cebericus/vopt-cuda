@@ -1,7 +1,4 @@
-/**
- * Copyright 2012 Cole Nelson
- * 
- */
+/** Copyright 2012 Cole Nelson */
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
@@ -42,7 +39,7 @@ public class Palette {
 		this.wht = new Color( display, 244, 244, 244 );
 		this.grey = new Color( display, 219, 219, 219 );
 
-		this.red_angry = new Color( display, 255, 0, 0 );
+		this.red_angry = new Color( display, 185, 0, 0 );
 		this.red_calm = new Color( display, 240, 188, 189 );
 		
 		this.or_calm = new Color( display, 246, 215, 188 );

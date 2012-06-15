@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * Set of basic file utilities for visual profiler tool.
- * Team 4b: Michael Barger, Alex Kelly, Cole Nelson
+ * 
  * @author nelsoncs 2012-May-14 
  */
 public class FileHandler {

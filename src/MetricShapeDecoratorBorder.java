@@ -32,33 +32,16 @@ public class MetricShapeDecoratorBorder extends MetricShapeDecorator {
 		this.shape[0] = base.shape[0] - this.line_width;
 		this.shape[1] = base.shape[1] - this.line_width;
 		
-		this.shape[2] = base.shape[2] + this.line_width;
+		this.shape[2] = base.shape[2];
 		this.shape[3] = base.shape[3] - this.line_width;
 		
-		this.shape[4] = base.shape[4] + this.line_width;
-		this.shape[5] = base.shape[5] + this.line_width;
+		this.shape[4] = base.shape[4];
+		this.shape[5] = base.shape[5];
 		
 		this.shape[6] = base.shape[6] - this.line_width;
-		this.shape[7] = base.shape[7] + this.line_width;
+		this.shape[7] = base.shape[7];
 	}
 
-	
-	/**
-	 * 
-	 * @param src
-	 * @return dest
-	 */
-	private int [] copy( int [] src ){
-		
-		int [] dest = new int[src.length];
-		
-		for( int i = 0; i < src.length ; ++i){
-			
-			dest[i] = src[i];
-		}
-			
-		return dest;
-	}
 	
 	/* (non-Javadoc)
 	 * @see bui.IsoShapeBase#draw()
@@ -110,7 +93,7 @@ public class MetricShapeDecoratorBorder extends MetricShapeDecorator {
 
 		base.gc.setAlpha(255);
 
-		this.bar = this.copy( base.shape );
+		this.bar = base.shape.clone();
 		
 		int bar_diff = (int) ( (1 - length) * base.length );
 		
