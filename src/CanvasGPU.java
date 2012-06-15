@@ -215,16 +215,25 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 		/** END threads per block */
 		
 		
-		/** BEGIN Text listeners */
+		
+		/** BEGIN Text/Combo listeners */
 		
 		/** TODO better error handling and/or entry validation */
+		
+		comboRegsPerThread.addListener(SWT.DefaultSelection, new Listener() {
+			
+			public void handleEvent(Event e) {
+			
+				System.out.println( "regsperthread defaultSelection ");
+				
+			}
+		});
+		
+		
 		textThreadsPerBlockX.addListener( SWT.DefaultSelection, new Listener() {
 
 			public void handleEvent(Event e) {
-				
-				System.out.println( "X defaultSelection ");
-				
-				
+			
 				try {
 					/** grab the new value and convert to double, update class attribute */
 					CanvasGPU.this.threadsPerBlockX = Double
@@ -278,28 +287,28 @@ public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListene
 		
 		/** Modify listeners to enable profile log parsing */
 		/** TODO needs better error checking */
-		textThreadsPerBlockX.addListener( SWT.Modify, new Listener() {
-
-			public void handleEvent(Event e) {
-				System.out.println( "X defaultSelection ");
-				if( e.keyCode == SWT.CR)
-					CanvasGPU.this.setComboThreadsPerBlock( CanvasGPU.this.calcThreadsPerBlock() );
-			}
-		});
-
-		textThreadsPerBlockY.addListener( SWT.Modify, new Listener() {
-
-			public void handleEvent(Event e) {
-				CanvasGPU.this.setComboThreadsPerBlock( CanvasGPU.this.calcThreadsPerBlock() );
-			}
-		});
-		
-		textThreadsPerBlockZ.addListener( SWT.Modify, new Listener() {
-
-			public void handleEvent(Event e) {
-				CanvasGPU.this.setComboThreadsPerBlock( CanvasGPU.this.calcThreadsPerBlock() );
-			}
-		});
+//		textThreadsPerBlockX.addListener( SWT.Modify, new Listener() {
+//
+//			public void handleEvent(Event e) {
+//				System.out.println( "X defaultSelection ");
+//				if( e.keyCode == SWT.CR)
+//					CanvasGPU.this.setComboThreadsPerBlock( CanvasGPU.this.calcThreadsPerBlock() );
+//			}
+//		});
+//
+//		textThreadsPerBlockY.addListener( SWT.Modify, new Listener() {
+//
+//			public void handleEvent(Event e) {
+//				CanvasGPU.this.setComboThreadsPerBlock( CanvasGPU.this.calcThreadsPerBlock() );
+//			}
+//		});
+//		
+//		textThreadsPerBlockZ.addListener( SWT.Modify, new Listener() {
+//
+//			public void handleEvent(Event e) {
+//				CanvasGPU.this.setComboThreadsPerBlock( CanvasGPU.this.calcThreadsPerBlock() );
+//			}
+//		});
 		/** END Text listeners */
 		
 		
