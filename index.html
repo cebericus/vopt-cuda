@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Vopt-cuda by nelsoncs</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Vopt-cuda</h1>
+        <p>Visual Occupancy and Performance Tool for CUDA.</p>
+        <p class="view"><a href="https://github.com/nelsoncs/vopt-cuda">View the Project on GitHub <small>nelsoncs/vopt-cuda</small></a></p>
+        <ul>
+          <li><a href="https://github.com/nelsoncs/vopt-cuda/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/nelsoncs/vopt-cuda/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/nelsoncs/vopt-cuda">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p><b>Visual Occupancy and Performance Tool for CUDA</b> </p>
+
+<p>Cole S. Nelson, Ph.D. (2012)  </p>
+
+<p><b>Abstract:</b> 
+The Compute Unified Device Architecture (CUDA) is a combined hardware and software 
+model for general-purpose graphics processing unit (GP-GPU) parallel computing. Successful 
+utilization of GP-GPU computing requires an understanding of the interaction 
+between the underlying platform-specific hardware and multiple levels of software 
+functionality.  To aid the programmer, numerous detailed reference materials and 
+tools are provided by the manufacturer.  However, integrating the multiplicity of 
+resources can prove to be a daunting task for the CUDA programmer.  </p>
+
+<p>An important criterion for correct, efficient parallel programs in CUDA is occupancy. The 
+transfer of program instructions and data from the host device to the CUDA-enabled 
+device is relatively slow and incurs a large overhead in time and physical resources. 
+For this reason, it is desirable to utilize the CUDA-enabled hardware to a maximal extent 
+and leverage the benefits of parallel execution.  The first step is to examine the 
+“occupancy”, meaning compute-cycle and resource utilization.  To analyze device occupancy 
+there are three basic, yet separate, tools that the CUDA programmer has available.  These are deviceQuery which enumerates the CUDA model for the underlying hardware 
+platform, the Occupancy Calculator which is a spreadsheet based form that requires the 
+output of deviceQuery and the command-line profiler log file which provides run-time 
+information.  A programmer is faced with transitioning between these three separate 
+resources and some of the 30 or so written reference materials in order to analyze a 
+developing CUDA program.</p>
+
+<p>Therefore, I have designed and implemented the Visual Occupancy and Performance Tool 
+(VOPT) for CUDA.  VOPT combines the basic 
+CUDA resources: deviceQuery, Occupancy Calculator and Command-Line Profiler log files 
+into a unified, visual reference and analysis tool.  This removes several practical 
+obstacles for the CUDA programmer and facilitates the analysis and optimization of
+ CUDA software.</p>
+
+<p><b>Notes:</b></p>
+
+<p>Requires SWT. </p>
+
+<p><a href="http://www.eclipse.org/swt/">http://www.eclipse.org/swt/</a></p>
+
+<p>Requires JCUDA.</p>
+
+<p><a href="http://www.jcuda.org">http://www.jcuda.org</a></p>
+
+<p>Currently using swt 3.7.2, jcuda 0.4.1 and OpenJDK 1.7.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/nelsoncs">nelsoncs</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
