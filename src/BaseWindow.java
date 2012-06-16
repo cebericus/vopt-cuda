@@ -443,6 +443,7 @@ public class BaseWindow {
 						i.setColor( palette.getBlk() );
 
 						i.draw();
+						
 						try {
 							i.setBar( profile_map.average( "occupancy" ), palette.getRed_angry() );
 						} catch (BadAttributeValueExpException e1) {
