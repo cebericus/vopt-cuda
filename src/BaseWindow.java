@@ -158,6 +158,7 @@ public class BaseWindow {
 		/** BEGIN Main Shell */
 		
 		shell.setSize(1350, 900);
+		shell.setMinimumSize(300, 600);
 		shell.setForeground(SWTResourceManager.getColor(76, 76, 76));
 		
 		String devs_title = new String();
@@ -238,7 +239,8 @@ public class BaseWindow {
 		compositeProgressBars.setLayout(new GridLayout(1, false));
 		GridData gd_compositeProgressBars = new GridData(SWT.LEFT, SWT.FILL, true, false, 1, 1);
 		gd_compositeProgressBars.heightHint = 600;
-		gd_compositeProgressBars.widthHint =274;
+		gd_compositeProgressBars.widthHint =275;
+		gd_compositeProgressBars.minimumWidth = 275;
 		compositeProgressBars.setLayoutData(gd_compositeProgressBars);
 		
 		/** Title and profile log file dialog */
