@@ -1,0 +1,16 @@
+NV_Warning: Ignoring the invalid profiler config option: dynmemperblock
+# CUDA_PROFILE_LOG_VERSION 2.0
+# CUDA_DEVICE 0 GeForce 9600 GT
+# CUDA_CONTEXT 1
+# TIMESTAMPFACTOR fffff6bc705e0108
+method,gputime,cputime,gridsizeX,gridsizeY,gridsizeZ,threadblocksizeX,threadblocksizeY,threadblocksizeZ,stasmemperblock,regperthread,occupancy,cacheconfigexecuted,cacheconfigrequested,warp_serialize,gld_incoherent,gst_incoherent,memtransfersize,memtransferdir,memtransferhostmemtype
+method=[ memcpyHtoD ] gputime=[ 735.616 ] cputime=[ 711.000 ] memtransfersize=[ 1920000 ] memtransferdir=[ 1 ] memtransferhostmemtype=[ 0 ]
+method=[ _Z11step_kernelPiS_ ] gputime=[ 9318.496 ] cputime=[ 9477.000 ] gridsize=[ 50, 37, 1 ] threadblocksize=[ 16, 16, 1 ] stasmemperblock=[ 96 ] regperthread=[ 12 ] occupancy=[ 0.667 ] cacheconfigrequested=[ 0 ]cacheconfigexecuted=[ 0 ]warp_serialize=[ 1004977 ] gld_incoherent=[ 711168 ] gst_incoherent=[ 0 ] 
+method=[ memcpyDtoH ] gputime=[ 364.320 ] cputime=[ 1244.000 ] memtransfersize=[ 1920000 ] memtransferdir=[ 2 ] memtransferhostmemtype=[ 0 ]
+method=[ memcpyHtoD ] gputime=[ 739.328 ] cputime=[ 730.000 ] memtransfersize=[ 1920000 ] memtransferdir=[ 1 ] memtransferhostmemtype=[ 0 ]
+method=[ _Z11step_kernelPiS_ ] gputime=[ 9305.664 ] cputime=[ 10616.000 ] gridsize=[ 50, 37, 1 ] threadblocksize=[ 16, 16, 1 ] stasmemperblock=[ 96 ] regperthread=[ 12 ] occupancy=[ 0.667 ] cacheconfigrequested=[ 0 ]cacheconfigexecuted=[ 0 ]warp_serialize=[ 1000522 ] gld_incoherent=[ 711168 ] gst_incoherent=[ 0 ] 
+method=[ memcpyDtoH ] gputime=[ 365.344 ] cputime=[ 1154.000 ] memtransfersize=[ 1920000 ] memtransferdir=[ 2 ] memtransferhostmemtype=[ 0 ]
+method=[ memcpyHtoD ] gputime=[ 727.392 ] cputime=[ 675.000 ] memtransfersize=[ 1920000 ] memtransferdir=[ 1 ] memtransferhostmemtype=[ 0 ]
+method=[ _Z11step_kernelPiS_ ] gputime=[ 9305.952 ] cputime=[ 10009.000 ] gridsize=[ 50, 37, 1 ] threadblocksize=[ 16, 16, 1 ] stasmemperblock=[ 96 ] regperthread=[ 12 ] occupancy=[ 0.667 ] cacheconfigrequested=[ 0 ]cacheconfigexecuted=[ 0 ]warp_serialize=[ 1008669 ] gld_incoherent=[ 711168 ] gst_incoherent=[ 0 ] 
+method=[ memcpyDtoH ] gputime=[ 364.768 ] cputime=[ 1248.000 ] memtransfersize=[ 1920000 ] memtransferdir=[ 2 ] memtransferhostmemtype=[ 0 ]
+
