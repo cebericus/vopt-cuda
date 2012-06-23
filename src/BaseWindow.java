@@ -72,12 +72,17 @@ public class BaseWindow {
 	/** main window shell */
 	protected Shell shell;
 
-	/** left hand panel and bottom panel first tab */
+	/** Parsed profiler data, displayed in left hand panel */
 	private ProfileMap profile_map;
+	
+	/** Profile data in table form, bottom panel first tab */
+	/** TODO enforce a sort order on columns */
 	private ProfileTable profileTable;
+	
+	/** filename for profile data */
 	private Text txtProfileData;
 	
-	/** widgets for left hand panel */
+	/** widgets for filtering of profile data, left hand panel */
 	private Combo comboMethods;
 	private Combo comboOptions;
 
@@ -104,22 +109,26 @@ public class BaseWindow {
 	public static void main(String[] args) {
 		
 		try {
+			
 			BaseWindow window = new BaseWindow();
 			window.open();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	/** constructor
-	 * 
+	/** 
+	 * constructor
 	 */
 	public BaseWindow(){
 		
 		this.shell = new Shell();
 		
+		/** colors for custom widgets */
 		this.palette = new Palette( this.shell.getDisplay() );
 		
+		/** parser for profile data */
 		this.profile_map = new ProfileMap();
 	}
 	
@@ -128,7 +137,10 @@ public class BaseWindow {
 	 */
 	public void open() {
 		Display display = Display.getDefault();
+		
+		/** the massive widget-fest is inside this function */
 		createContents();
+		
 		shell.open();
 		shell.layout();
 		while (!shell.isDisposed()) {
@@ -147,6 +159,7 @@ public class BaseWindow {
 		this.profileTable.dispose();
 
 	    this.shell.dispose();
+	    
 	    System.exit(0);
 	}
 
@@ -161,12 +174,14 @@ public class BaseWindow {
 		shell.setMinimumSize(300, 600);
 		shell.setForeground(SWTResourceManager.getColor(76, 76, 76));
 		
+		/** reporting of CUDA devices found */
 		String devs_title = new String();
 		
 		try {
 			/** query for GPU(s) and put info in title bar */
 			this.devices = new DeviceQuery();
 			
+			/** look for multiple devices */
 			for( int i = 0; i < devices.getDeviceCount(); ++i ){
 				
 				devs_title = devs_title + " -  Devices found: " + "(" + i + ") " + devices.get()[i].getName();
@@ -177,8 +192,10 @@ public class BaseWindow {
 			devs_title = " - DeviceQuery Exception - CUDA Devices not found.";
 		}
 		
-		
+		/** print to title bar */
 		shell.setText("VOPT " + devs_title );
+		
+		/** shell layout manager - two columns, unequal width*/
 		GridLayout gl_shlVisualProfiler = new GridLayout(2, false);
 		shell.setLayout(gl_shlVisualProfiler);
 		
@@ -206,6 +223,7 @@ public class BaseWindow {
 		});
 		mntmExit.setText("Exit");
 
+		/** TODO history unimplemented and made be discarded */
 		MenuItem mntmHistory = new MenuItem(menuMain, SWT.CASCADE);
 		mntmHistory.setText("History");
 		
@@ -323,8 +341,6 @@ public class BaseWindow {
 		canvasOccupancy = new Canvas(compositeOccupancy, SWT.NONE);
 		canvasOccupancy.setBounds(0, 10, 265, 50);
 		
-		
-		
 		/** END Profile Data Panel */
 		
 
@@ -340,7 +356,9 @@ public class BaseWindow {
 		canvasGPU.setLayoutData(gd_canvasGPU);
 		canvasGPU.setVisible(true);
 		canvasGPU.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		
 		/** END Canvas Drawing Area */
+		
 		
 		/** BEGIN lower panel */
 		
@@ -429,7 +447,7 @@ public class BaseWindow {
 						l.setSize(260, 20);
 
 						/** create a polygon shape for indicator */
-						MetricShapeDecoratorBorder i = new MetricShapeDecoratorBorder( 
+						MetricShapeDecoratorBorder occupancy = new MetricShapeDecoratorBorder( 
 
 								/**  set length to 260 px */
 								( new MetricShapeBase( BaseWindow.this.canvasOccupancy, 1, 0, 258, SWT.NULL) )
@@ -439,15 +457,15 @@ public class BaseWindow {
 								);
 
 						/** set background for bar graph */
-						i.base.setColor( palette.getOr_calm() );
+						occupancy.base.setColor( palette.getOr_calm() );
 
 						/** set border color */
-						i.setColor( palette.getBlk() );
+						occupancy.setColor( palette.getBlk() );
 
-						i.draw();
+						occupancy.draw();
 						
 						try {
-							i.setBar( profile_map.average( "occupancy" ), palette.getRed_angry() );
+							occupancy.setBar( profile_map.average( "occupancy" ), palette.getRed_angry() );
 						} catch (BadAttributeValueExpException e1) {
 							e1.printStackTrace();
 						}
