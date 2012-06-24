@@ -434,7 +434,7 @@ public class BaseWindow {
 					 * greyed out in response to combo box filtering
 					 */
 
-					if( BaseWindow.this.profile_map.contains( "occupancy" ) ){
+					if( BaseWindow.this.profile_map.exists( "occupancy" ) ){
 						
 						/** create a label */
 						Label l = new Label( BaseWindow.this.canvasOccupancy, SWT.BOLD );
@@ -474,21 +474,21 @@ public class BaseWindow {
 					
 					/** TODO move this set to ControllerCanvasGPU */
 					/** populate canvasGPU threads/block with data from profile log*/
-					if( BaseWindow.this.profile_map.contains( "threadblocksizeX" ) )
+					if( BaseWindow.this.profile_map.exists( "threadblocksizeX" ) )
 						BaseWindow.this.canvasGPU.setThreadsPerBlockX( profile_map.average( "threadblocksizeX" ) );
 
-					if( BaseWindow.this.profile_map.contains( "threadblocksizeY" ) )
+					if( BaseWindow.this.profile_map.exists( "threadblocksizeY" ) )
 						BaseWindow.this.canvasGPU.setThreadsPerBlockY( profile_map.average( "threadblocksizeY" ) );
 					
-					if( BaseWindow.this.profile_map.contains( "threadblocksizeZ" ) )
+					if( BaseWindow.this.profile_map.exists( "threadblocksizeZ" ) )
 						BaseWindow.this.canvasGPU.setThreadsPerBlockZ( profile_map.average( "threadblocksizeZ" ) );
 					
 					/** populate canvasGPU registers/thread with data from profile log*/
-					if( BaseWindow.this.profile_map.contains( "regperthread" ) )
+					if( BaseWindow.this.profile_map.exists( "regperthread" ) )
 						BaseWindow.this.canvasGPU.setRegsPerThread( profile_map.average( "regperthread" ) );
 				
 					/** populate canvasGPU shared mem/block with data from profile log*/
-					if( BaseWindow.this.profile_map.contains( "stasmemperblock" ) )
+					if( BaseWindow.this.profile_map.exists( "stasmemperblock" ) )
 						BaseWindow.this.canvasGPU.setSharedPerBlock( profile_map.average( "stasmemperblock" ) );
 
 					/** populate table in bottom panel with data from profile log*/			

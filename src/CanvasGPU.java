@@ -23,7 +23,18 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 /**
- * Drawable canvas for visual profiler tool
+ * Drawable canvas for visual profiler tool.
+ * 
+ * Central canvas for Occupancy calculator display.
+ * 
+ * Occupancy calculator is a PNG image with widget overlays for user and device
+ * data.  The "trail of consequation" is displayed as highlites over the flowchart
+ * elements.  The highlites indicate the occupancy limiting factor(s) for the 
+ * device and kernel combination.  
+ * 
+ * TODO Incomplete implementation.
+ * TODO Testing.
+ * 
  * @author nelsoncs 2012-May-14 
  */
 public class CanvasGPU extends Canvas implements MouseListener, MouseMoveListener {

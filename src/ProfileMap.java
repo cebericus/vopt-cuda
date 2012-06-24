@@ -280,7 +280,7 @@ public class ProfileMap {
 	 * @param option
 	 * @return true if option exists in map, otherwise false
 	 */
-	public boolean contains( String option ){
+	public boolean exists( String option ){
 		
 		if( this.profileMap.containsKey( option ) )
 			return true;
@@ -646,8 +646,10 @@ public class ProfileMap {
 
 
 	/**
-	 * test: note is is best to use a fairly short log file or the console
+	 * test: note it is best to use a fairly short log file or the console
 	 * output buffer is overrun.
+	 * 
+	 * TODO tests are incomplete for this module
 	 * 
 	 * @param args
 	 */
